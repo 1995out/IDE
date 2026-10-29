@@ -123,7 +123,7 @@ src/
   components/         工作台 / Studio / Diff / 编辑器等
   routes/             控制台路由（TanStack Start）
 tests/                unit / components / integration / e2e
-docs/                 specs/（规范四件套）· adr/ · rfc/ · reports/ · backlog/ · templates/
+docs/                 scheme.md（意图层）· adr/ · specs/ · reports/ · ledger/ · rfc/ · templates/
 ```
 
 ---
@@ -156,7 +156,9 @@ npm run build                   # 前端与装配 dist/
 
 ## 文档
 
-**全局地图见 [`docs/README.md`](docs/README.md)。**（2026-10-27 文档治理重组：文件名已去除版本号与日期后缀，改为英文 kebab-case；版本流转交由 Git Tag 与 commit 历史承载。）
+**全局地图见 [`docs/README.md`](docs/README.md)。**
+
+**从这里开始**：[`docs/scheme.md`](docs/scheme.md)——用 Stagent 自己的方案格式写成的 Stagent 方案：用户原话、三 Agent 设想（右栏只读脑暴 / 中栏 Supervisor 画布 / Worktree 施工 Worker）、待拍板的分歧与落差登记。（2026-10-29 文档治理：文档按 Supervisor 产物分层，台账并入 `docs/ledger/`。）（2026-10-27 文档治理重组：文件名已去除版本号与日期后缀，改为英文 kebab-case；版本流转交由 Git Tag 与 commit 历史承载。）
 
 现行规范四件套：
 

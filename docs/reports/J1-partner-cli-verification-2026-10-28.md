@@ -27,7 +27,7 @@ $ claude --version
 | 真实部分 | CLI 二进制、argv、`--settings`、`permissions`、PreToolUse hook、文件系统 |
 
 **口径声明**：本次真实 CLI 验证**使用的是替代模型端点**（本地 stub）；权限层与 hook 为**真实执行**，不是模拟。
-CLI 运行时的版本检查不在 TASK-J.1 范围内，本轮**不实现**，仅作为挂账项登记（见 [`open-items-2026-10-28.md`](./open-items-2026-10-28.md)）。
+CLI 运行时的版本检查不在 TASK-J.1 范围内，本轮**不实现**，仅作为挂账项登记（见 [`../ledger/consistency-audit.md`](../ledger/consistency-audit.md) OP-28；原指向的 `open-items-2026-10-28.md` 从未入库）。
 
 因此本次是「真实 CLI + 替身模型」：权限与 hook 链路完全真实，模型输出是脚本化的（固定返回一次 `Read` + 一次 `Write`）。
 

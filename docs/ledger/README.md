@@ -38,3 +38,15 @@
 1. 每一项都必须能回答「**谁来做、做完的判据是什么**」。没有判据的不得放进来。
 2. 一项被修完后不删除——标记已修复并注明 commit / PR，或随任务卡归档进 Git 历史。
 3. 立卡施工时，把卡号回填到对应条目。
+
+## 架构决议落盘记录（2026-10-30 用户拍板）
+
+依据用户在 2026-10-30 的终审裁决（`q12`～`q16`），关闭以下冲突并立项：
+
+| 裁决编号 | 涉及冲突 | 裁决核心 | 落地归宿 |
+| :--- | :--- | :--- | :--- |
+| **DEC-001** | `conf-1` | 中栏 Supervisor 意图编译组件化，形态开放（不锁死 Claude Code，允许轻量实现） | 立项并合入 [`../adr/0014-three-agent-topology-open-supervisor.md`](../adr/0014-three-agent-topology-open-supervisor.md)；关闭 conf-1 |
+| **DEC-002** | `conf-5` | 审阅内容（路径树/命令明细）后置验收幕；保留“确认开工”与“合入”两次点击授权；物理写门禁与保护清单不动 | 回写 `scheme.md` §7；更新运行时签署规范；关闭 conf-5 |
+| **DEC-003** | `conf-6` | 允许 Worker 受控只读外网通道，但必须强绑定凭据保险库（Vault）一并实施，账密严禁进入对话上下文 | 登记为 Vault 前置依赖；关闭 conf-6；闭环 goal-2 / oq-3 |
+| **DEC-004** | `conf-2, 4` | 右栏剥离写死的架构师人设与 `partner_hint` / `buildProtectionPromptNotice` 前缀，恢复纯粹自由对话 | 关闭 conf-2、conf-4；更新 Claude/Baseline Adapter |
+| **DEC-005** | `conf-3, 7` | 中栏仅经画布交互；右栏维持精确只读白名单防穿透 | 关闭 conf-3、conf-7 |

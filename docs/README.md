@@ -135,3 +135,11 @@
 - `docs/tasks/TASK-C.21-未闭环收尾-cursor-brief.md`（一次性执行指令）
 
 **反虚构提醒**：仓库中不存在《产品体验与技术底座设计规范 v1.1》，任何文档或代码注释都不得引用它。
+
+
+### 4. 交付与工程闭环规格（NEW）
+- [`docs/audits/PATH-AUDIT.md`](./audits/PATH-AUDIT.md)：Stagent 全链路实现路径穿透审计（意图摄取至部署全链路）
+- [`docs/specs/software-contract-lifecycle.md`](./specs/software-contract-lifecycle.md)：Software Contract 核心第一性原理与四要素判定（可观察、可边界、可冻结、可验证）
+- [`docs/specs/golden-slice.md`](./specs/golden-slice.md)：Phase 2 黄金切片施工契约（一句话需求到试玩可交互的最小闭环）
+- [`docs/specs/playtest-preview-orchestration.md`](./specs/playtest-preview-orchestration.md)：中栏试玩预览与动态端口环境编排工程规格
+- [`docs/specs/deployment-and-environment.md`](./specs/deployment-and-environment.md)：部署、环境适配与持续交付工程规格

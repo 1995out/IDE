@@ -50,3 +50,15 @@
 | **DEC-003** | `conf-6` | 允许 Worker 受控只读外网通道，但必须强绑定凭据保险库（Vault）一并实施，账密严禁进入对话上下文 | 登记为 Vault 前置依赖；关闭 conf-6；闭环 goal-2 / oq-3 |
 | **DEC-004** | `conf-2, 4` | 右栏剥离写死的架构师人设与 `partner_hint` / `buildProtectionPromptNotice` 前缀，恢复纯粹自由对话 | 关闭 conf-2、conf-4；更新 Claude/Baseline Adapter |
 | **DEC-005** | `conf-3, 7` | 中栏仅经画布交互；右栏维持精确只读白名单防穿透 | 关闭 conf-3、conf-7 |
+
+## 交付全链路挂账（2026-10-30 新增）
+
+| 编号 | 问题 | 阻断级别 | 决策人 | 落点 |
+| :--- | :--- | :--- | :--- | :--- |
+| OQ-REL-1 | 凭据保险库存储后端：系统钥匙串（推荐）还是本地加密文件 | BLOCKER（对 `TASK-L.14`） | 用户 | [`../specs/release-and-operations.md`](../specs/release-and-operations.md) §4 |
+| SA-1 | ADR-0014「两次点击」下敏感项授权方式；推荐「确认开工」一次点击携带授权（授权存 `ScopePlan`，只有用户原话点名的敏感项才进清单） | NON_BLOCKER（已采用推荐默认，用户可改判） | 用户 | [`../specs/delivery-lifecycle.md`](../specs/delivery-lifecycle.md) §5；`../scheme.md` dec-8 |
+| DLV-1 | ADR-0015～0017 状态为「随 PR 合入生效」；否决任一篇时，对应 L 卡阻断 | BLOCKER（对 M3、M4） | 用户 | PR 审阅 |
+| DLV-2 | PR #3（`docs/complete-stagent-delivery-pipeline`）与本轮补全内容重叠，且含若干与代码不符的路径与状态名 | NON_BLOCKER | 用户 | [`../reports/delivery-path-audit.md`](../reports/delivery-path-audit.md) §5；建议关闭 PR #3 |
+| DLV-3 | `AdapterRegistry` 未接线，Worker 只有 OpenAI `AiWorker`；Claude Code 作 Worker（W.5a 的 worker 角色）未接入派工 | NON_BLOCKER（M2 不依赖） | 卡 owner | 审计 §2 S5；需另立卡 |
+| DLV-4 | `.stagent/metadata/` 仍在代码写入路径列表中，与 ADR-0011 废止该路径冲突 | NON_BLOCKER | 卡 owner | 审计依据：代码 `.stagent/` 写入清单 |
+| DLV-5 | 系统地图 UI（项目视图第二页）与「改这里会影响什么」入口尚未立卡 | NON_BLOCKER | — | [`../specs/technical-design-and-knowledge.md`](../specs/technical-design-and-knowledge.md) §5 |

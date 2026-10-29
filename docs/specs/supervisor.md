@@ -452,7 +452,7 @@ Stagent 的灵魂不是「另一个能写码的聊天框」，而是：**自由�
 | `E_DEMO_STALE` | `demo.scheme_revision !== scheme_revision` | 重新生成 Demo |
 | `E_SCOPE_NOT_READY`（v2.1） | 没有与当前修订绑定的 `ScopePlan` | 等预检完成（第三部分 §15.5） |
 | `E_SCOPE_POLICY`（v2.1） | 自动收敛后范围仍违反通配符分级 | 说清要改哪块，或排除该区域 |
-| `E_SCOPE_APPROVAL_REQUIRED`（v2.1） | 有敏感项未表态 | 点「可以」或「不行」 |
+| `E_SCOPE_APPROVAL_REQUIRED`（v2.1） | 有敏感项未表态 | 点「可以」或「不行」（ADR-0014 后改为「确认开工」一次授权，见 [`delivery-lifecycle.md`](./delivery-lifecycle.md) §5 SA-1） |
 
 ### D2 · 允许 `PLAN_CONFIRMED → CONTRACT_SIGNED` 直签
 
@@ -823,6 +823,8 @@ Stagent 的灵魂不是「另一个能写码的聊天框」，而是：**自由�
 ---
 
 # 第三部分 · 闭环规格 v2.1（意图编译器 · 改动范围与验收 · 确认后单页旅程）
+
+> **ADR-0014 修订指针（2026-10-30 加注，不改本部分条文）**：用户已裁决 [ADR-0014](../adr/0014-three-agent-topology-open-supervisor.md)。以下条文以 ADR-0014 与任务卡「ADR-0014 修订」块为准：§13.2 右栏「懂产品的高级架构师」人设作废，右栏无系统提示（DEC-004）；§14.3 `partner_hint` 字段作废（J.10 修订）；§15 开工前审阅后置，只保留「确认开工」与「合入」两次点击，敏感项授权见 [`delivery-lifecycle.md`](./delivery-lifecycle.md) §5（J.3 / J.5 / J.6 修订）；§16.3 / §16.5 / §16.7 中「右栏插入系统消息」「搭档一句话确认」改为中栏画布卡片（DEC-005，J.7 修订）。本部分之后的环节（项目分解、技术方案、测试义务、发布）见 [`delivery-lifecycle.md`](./delivery-lifecycle.md)。
 
 > **状态**：**现行生效的目标规格**（2026-10-27 定稿）。本部分补齐第一、二部分留下的三处断裂：方案从哪里来（§14）、用户到底授权了什么（§15）、点了「确认方案」之后发生什么（§16）。
 > **实现口径**：本部分是**目标契约**。§19 逐条登记了当前代码与本规格的落差；§18 矩阵新增行一律为 `⏳`，按 §10 判定口径，**接线并有测试前不得标 COMPLETED**。
@@ -1350,7 +1352,7 @@ interface ScopePlan {
 | :--- | :--- | :--- | :--- |
 | `E_SCOPE_NOT_READY` | 没有与当前 `scheme_revision` 绑定的 `ScopePlan`（还在算，或方案刚变） | 「正在核对要改哪些地方…」（通常 < 1 秒，按钮短暂转圈） | 等一下 |
 | `E_SCOPE_POLICY` | `scopePlan.grade.ok === false`（自动收敛后仍有不合规范围） | 「『整个 src 目录』范围太大，我没法替你担保不误伤。请告诉我具体要改哪块，或把这部分拆成单独一轮。」 | 继续聊、排除该区域 |
-| `E_SCOPE_APPROVAL_REQUIRED` | `needs_approval` 中有 `approved === null` 的项 | 「还有 1 处敏感改动等你点头」并滚动到该项 | 点「可以」或「不行」 |
+| `E_SCOPE_APPROVAL_REQUIRED` | `needs_approval` 中有 `approved === null` 的项 | 「还有 1 处敏感改动等你点头」并滚动到该项 | 点「可以」或「不行」（ADR-0014 后改为「确认开工」一次授权，见 [`delivery-lifecycle.md`](./delivery-lifecycle.md) §5 SA-1） |
 
 **签署链对齐（Daemon 侧）**：
 

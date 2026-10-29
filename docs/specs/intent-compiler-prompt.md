@@ -1,5 +1,7 @@
 # 意图编译器 · System Prompt 体系与原话锚定协议（TASK-J.10 · J.11 种子）
 
+> **ADR-0014 / DEC-004 修订（2026-10-30 加注）**：§5「partner_hint 与人格分裂」整节作废，生成 Schema 不再含 `partner_hint`，编译器输出不回流右栏（见 `development-tasks.md` J.10 修订块）。编译器实现形态开放（[ADR-0014](../adr/0014-three-agent-topology-open-supervisor.md) §1）；本文的 System Prompt 体系仍是采用模型实现时的口径。
+
 > **状态**：**设计定稿 · 待施工**（立卡见 [`development-tasks.md`](./development-tasks.md) §3.4c `TASK-J.10`）
 > **建立日期**：2026-10-27（Asia/Hong_Kong）
 > **上位规格**：[`supervisor.md`](./supervisor.md) 第三部分 §14.1～§14.9、§14.11；[`scheme-patch-engine.md`](./scheme-patch-engine.md)（引擎验收契约，下称「引擎」）。

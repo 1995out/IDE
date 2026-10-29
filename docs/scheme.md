@@ -7,7 +7,7 @@
 | 字段 | 值 |
 | :--- | :--- |
 | `scheme_id` | `stagent-self` |
-| `scheme_revision` | 2（2026-10-30 用户拍板确权版） |
+| `scheme_revision` | 3（2026-10-30 目标能力补全：交付全链路） |
 | `frozen` | `false`——方案仍在演进；冻结点由用户「确认方案」决定 |
 | `title` | 只说需求与偏好，其余交给 Agent 的本地编程工作台 |
 | `audience` | 能说清「想要什么」、但不想做技术决策的人（含非技术业务用户） |
@@ -40,6 +40,13 @@
 | q14 | U2 | conf-6：为 Worker 开受控只读网络通道，必须绑定凭据保险库（Vault）一起实施，账密禁止进入对话上下文 |
 | q15 | U2 | 右栏恢复完全自由对话体验，剥离写死的架构师人设与暗中拼入的消息前缀 |
 | q16 | U2 | 选 A——我先在 GitHub 合入 PR #1，之后按白话拍板推进第 2 步。 |
+| q17 | U3 | 真正把一个项目做好，不只是把代码写出来，还需要把需求理解、技术方案、功能实现、测试和部署这些环节串起来。 |
+| q18 | U3 | 把一个无法掌握的大型 AI 软件项目，变成一组你能够理解、能够验收、能够追踪、能够维护的可控任务。 |
+| q19 | U3 | 让"一个人 + AI"的开发团队，在复杂度超过个人脑容量之后，仍然能够掌握整个系统 |
+| q20 | U3 | 让一个人也能驾驭 AI 构建的复杂软件。 |
+| q21 | U3 | Agent 现在是否能直接照任务无脑开发？ |
+
+> `U3` = 2026-10-30 用户提出的目标能力与审计要求（任务 TINA16-3 第三轮）。审计结论见 [`reports/delivery-path-audit.md`](./reports/delivery-path-audit.md)。
 
 **已落盘的用户裁决**（不是本轮原话，但属于 `user_confirmed`，可作证据）：
 
@@ -61,6 +68,10 @@
 | goal-4 | Stagent 用自己的思想造自己：本项目是第一个作品。 | `user_said` | q8 | 本文即实践。 |
 | goal-5 | 文档就是 Supervisor 产物的样板：文档治理 = Supervisor 的需求总结步骤。 | `user_said` | q8、q10 | 本文 + [`README.md`](./README.md) 分层。 |
 | goal-6 | 开发以 `docs/` 为准，所以文档必须可直接当施工依据。 | `user_said` | q9 | 由 README「权威分层」保证。 |
+| goal-7 | **目标能力**：把需求理解、技术方案、功能实现、测试、部署串成一条链，交付的是能用的软件而不只是代码。 | `user_said` | q17 | 主干见 [`specs/delivery-lifecycle.md`](./specs/delivery-lifecycle.md)；S3、S4、S7 与测试义务此前空白，本轮补规格与 L 系列卡 |
+| goal-8 | 大型项目被拆成一组能理解、能验收、能追踪、能维护的可控任务。 | `user_said` | q18 | [`specs/project-decomposition.md`](./specs/project-decomposition.md)、[ADR-0015](./adr/0015-contract-as-unit-of-delivery.md) |
+| goal-9 | 复杂度超过个人脑容量后，一个人仍能掌握整个系统。 | `user_said` | q19、q20 | [`specs/technical-design-and-knowledge.md`](./specs/technical-design-and-knowledge.md)、[ADR-0016](./adr/0016-system-knowledge-base-in-repo.md) |
+| goal-10 | 任务卡能被 Agent 直接执行，不需要现场发明。 | `user_said` | q21 | [`specs/task-card-standard.md`](./specs/task-card-standard.md) |
 
 ## 2. 不做（`out_of_scope[]`）
 
@@ -79,6 +90,9 @@
 | mod-2 | **中栏 · Supervisor + 方案画布** | 也是 Claude Code。旁观用户与右栏的对话，把它编译成方案；**只通过画布（canvas）与用户交互**，不在右栏插话。 | 是 | `user_said` | q6 |
 | mod-3 | **施工 Worker** | 在 Worktree 里直接执行 Supervisor 生成的机器指令；不聊产品、不扩范围、不合主干。 | 否（用户只看到步骤点亮） | `user_said` | q7；[ADR-0007](./adr/0007-dual-agent-daemon-authority.md) |
 | mod-4 | **Daemon（裁判，不是 Agent）** | 确定性宿主程序：状态机、写盘、凭证、真实命令验证、合并放行。三个 Agent 都无权自批、自判、自合。 | 否 | `ai_inferred` | [ADR-0007](./adr/0007-dual-agent-daemon-authority.md)、[ADR-0005](./adr/0005-deterministic-verification-gate.md)；用户原话未提，补上是因为没有它三 Agent 的分权不成立 |
+| mod-6 | **项目计划（ProjectPlan）** | 把方案拆成里程碑与合同序列；画布上显示「项目地图」：每份合同在哪一幕、还剩几份。 | 是 | `ai_inferred` | q18；[`specs/project-decomposition.md`](./specs/project-decomposition.md) |
+| mod-7 | **系统知识库** | 随代码入库的系统描述：模块地图、技术决策、接口、变更日志。每份合同合入时同步更新，Daemon 校验不漂移。 | 是 | `ai_inferred` | q19；[`specs/technical-design-and-knowledge.md`](./specs/technical-design-and-knowledge.md) |
+| mod-8 | **发布（Release）** | 合并之后的独立生命周期：构建、注入配置、部署到用户自有目标、健康检查、回滚。 | 是 | `ai_inferred` | q17「部署」；[`specs/release-and-operations.md`](./specs/release-and-operations.md) |
 | mod-5 | **文档体系** | 让 `docs/` 本身就是一份方案：原话 → 目标 → 决策 → 规格 → 任务卡 → 证据 → 台账。 | 是（对开发者） | `user_said` | q8、q10 |
 
 ## 4. 流程（`flows[]`）
@@ -120,6 +134,10 @@
 | dec-1 | 「Supervisor 生成的机器指令」具体是什么？ | 签署后的**合同 + 任务图节点**：Supervisor 起草，用户在画布确认，Daemon 派发给 Worker。 | Supervisor 直接给 Worker 发自由文本 prompt | 后者让「提建议的人」同时指挥执行，ADR-0007 分权失效。前者与 q7「直接执行」不冲突：用户确认后无需再介入。 | low | `user_confirmed` | q7、q13；ADR-0007 |
 | dec-2 | 用户的「主观偏好」放在方案哪里？ | 作为 `goals` / `acceptance` 中 `check: playtest` 的条目，由用户试玩判定。 | 单独建偏好字段 | 偏好只能由人判，正好对应试玩验收；不必扩 Schema。 | low | `user_confirmed` | q1、q13 |
 | dec-3 | 三 Agent 拓扑要不要写成 ADR？ | 本方案确认后写 ADR-0014「三 Agent 拓扑与意图编译组件化：中栏形态开放 / 右栏无系统提示脑暴 / Worktree Worker 隔离施工」。 | 只留在本文 | ADR 才能单独 supersede ADR-0007 中「需求 AI 与 Supervisor 允许共用会话」一句。 | high | `user_confirmed` | q4～q7、q12；ADR-0014 |
+| dec-5 | 大需求怎么拆？ | 项目 → 里程碑 → 合同 → 任务节点四级；合同是最小可验收交付单元，一轮一份，串行执行。 | 一份大合同并行多 Worker（RFC v0.2 §5） | 单工作区互斥（ADR-0002）仍成立；合同小才能逐份验收与回滚。 | high | `accepted`（ADR-0015，随 PR 合入生效；PR 中可否决） | q18；[ADR-0015](./adr/0015-contract-as-unit-of-delivery.md) |
+| dec-6 | 技术决策记在哪里，用户才能在复杂度上升后仍掌握系统？ | 目标项目仓库内的 `docs/system/`：模块地图 + 决策记录 + 接口 + 变更日志，随每份合同更新，Daemon 校验覆盖。 | 记在 `.stagent/`（本地、不入库） | `.stagent/` 被 `.git/info/exclude` 排除，换机即丢，且不随代码评审。 | high | `accepted`（ADR-0016，随 PR 合入生效；PR 中可否决） | q19；[ADR-0016](./adr/0016-system-knowledge-base-in-repo.md) |
+| dec-7 | 部署放在合同状态机里，还是单独一条生命周期？ | 单独的 Release 生命周期，引用已合并的提交；`MERGED` 仍是合同唯一终态。 | 在合同状态机 `MERGED` 之后加 `DEPLOYED` | 不破坏 ADR-0012；一次发布可包含多份合同，失败回滚不应解开已合并的合同。 | high | `accepted`（ADR-0017，随 PR 合入生效；PR 中可否决） | q17；[ADR-0017](./adr/0017-release-lifecycle-after-merge.md) |
+| dec-8 | ADR-0014「只保留两次点击」下，涉及保护清单的改动怎么授权？（SA-1） | 敏感项默认排除出范围；方案确需触及时，「确认开工」按钮上写明「含 N 处敏感改动」，这一次点击同时记录这些授权。 | 保留逐项「可以/不行」 | 守住两次点击，也不放宽保护清单：授权仍逐项落进合同 `approval`。 | high | `pending` | q13；[`specs/delivery-lifecycle.md`](./specs/delivery-lifecycle.md) §5 |
 | dec-4 | `development-tasks.md`（约 460KB）要不要拆？ | 拆成「卡号索引 + 活跃卡 + 已完成卡 + 修订流水」，卡号不变。 | 维持单文件 | 约 65% 是已完成卡的历史，仍要执行的 J 系列只占约 15%；但拆分会与正在进行的 PR 冲突，需择时。 | low | `pending` | q9；[`ledger/README.md`](./ledger/README.md) DOC-1 |
 
 ## 7. 分歧（`conflicts[]`）——原话与现行规格打架的地方
@@ -154,6 +172,9 @@
 | acc-3 | Supervisor 的一切输出只出现在中栏画布。 | `playtest` | supervisor §18 J 系列 | ⏳ |
 | acc-4 | 方案里每条 `user_said` 条目都能在原话中找到逐字子串。 | `auto` | INV-LEDGER-01；本文 §0 可用同一规则自检 | 本文已人工核对 |
 | acc-5 | Worker 只在 Worktree 与合同范围内写盘。 | `auto` | Gateway / P.1 现有测试 | PASS |
+| acc-7 | 每份合同的验收条目（`check: auto`）都有至少一条测试，且该测试在基线上失败、在候选上通过。 | `auto` | [`specs/verification-strategy.md`](./specs/verification-strategy.md) §3；TASK-L.3、L.4 | ⏳ |
+| acc-8 | 合入后知识库覆盖本次改动的全部文件。 | `auto` | [`specs/technical-design-and-knowledge.md`](./specs/technical-design-and-knowledge.md) §4.4；TASK-L.12 | ⏳ |
+| acc-9 | 一次发布失败后自动回到上一个 LIVE 版本。 | `auto` | [`specs/release-and-operations.md`](./specs/release-and-operations.md) §1、§3.3；TASK-L.15 | ⏳ |
 | acc-6 | 北极星：给网址 + 登录信息，用户只回答偏好问题，产出站点经试玩认可。 | `playtest` | 无（依赖 conf-6、oq-2、oq-3） | ⏳ |
 
 ---
@@ -192,7 +213,12 @@
 | gap-9 | 早期卡把右栏写成「编码 Worker 对话窗口」 | C.1、W.1、W.5a、C.6、P.1、E.1、Sprint 1 门禁的旧叙述 | 已在任务卡文件头加取代说明；原文不改 |
 | gap-10 | 用户不做技术决策 | 现行有 `needs_approval` 逐项表态等审批点 | conf-5 |
 | gap-11 | 复刻网站需读参考站 | 全部 Agent 禁 `WebFetch` / `WebSearch` | conf-6；无卡 |
-| gap-12 | 登录凭据受控使用 | 无凭据托管通道；README 声明无法防止用户把秘密写进合同 | oq-3；无卡 |
+| gap-12 | 登录凭据受控使用 | 无凭据托管通道；README 声明无法防止用户把秘密写进合同 | oq-3；TASK-L.14 |
+| gap-13 | 大需求拆成合同序列 | 无项目级计划；任务图一份合同一张（`src/lib/journey/proposal-from-contract.ts`） | TASK-L.7～L.10 |
+| gap-14 | 新功能带测试 | 网关默认拦截测试文件写入（`daemon/mcp/gateway.ts` `E_TEST_FILE_WRITE_BLOCKED`）；Worker 指令不含验证命令 | TASK-L.2、L.3、L.4 |
+| gap-15 | 试玩看到真实应用 | 真机预览只服务静态目录或已有 URL，不在 Worktree 启动用户应用 | TASK-L.5 |
+| gap-16 | 技术方案与系统知识 | 无设计产物；`daemon/arch/*` 只做按需展示 | TASK-L.11～L.13 |
+| gap-17 | 合并后可发布 | deploy / release / health_check 全库 0 命中 | TASK-L.15、L.16 |
 
 ---
 
@@ -205,6 +231,14 @@
 - **需要你点头**：§6 的四项推荐、§7 的七张冲突卡、§8 的四个待澄清问题。审阅本 PR 即是一次「确认方案」；合入不等于这些项已拍板。
 - **怎么算做完**：`docs/` 内所有相对链接可解析（脚本校验）；§0 每句原话都是用户消息的逐字子串（脚本校验）；`npm run lint` 与 `npm run typecheck` 不因本次改动变红。
 - **预计规模**：新增 2 份文档，移动 3 份文件，约 20 份文档加注或修链接。
+
+**第三轮（2026-10-30，交付全链路）的改动范围与验收**：
+
+- **会改动的地方**：新增审计报告 1 份、规格 6 份（总装图、项目分解、技术方案与知识库、验证策略、发布与运维、卡就绪标准）、ADR 3 篇（0015～0017）、任务卡模板 1 份；任务卡文件新增 §3.4d（L.1～L.17）、矩阵行、DAG 边，并给 J.3 / J.5 / J.6 / J.7 / J.10 加「ADR-0014 修订」块；supervisor 与 intent-compiler 加修订指针；本文追加 q17～q21 与相关条目。
+- **这次不会碰**：任何产品代码；任何既有任务卡的状态；ADR-0001～0014 正文。
+- **需要你点头**：ADR-0015～0017（合入即生效）；dec-8（SA-1 敏感项授权方式）；OQ-REL-1（保险库后端，L.14 开工前）。
+- **怎么算做完**：链接检查 0 断链；原话逐字核对；DAG 无环；新文档引用的现有代码路径全部存在；`npm run lint` / `npm run typecheck` 不变红。
+- **预计规模**：新增 11 份文件，修改约 8 份文件。
 
 ---
 

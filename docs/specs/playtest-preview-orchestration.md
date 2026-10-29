@@ -1,6 +1,6 @@
 # 试玩预览与环境编排工程规格 (playtest-preview-orchestration.md)
 
-> **修订状态**：ACTIVE  
+> **状态**：PROPOSED — 本文为补充提案，尚未与既有 Schema/ADR 完成冲突裁决
 > **关联架构**：`docs/adr/0008-demo-isolated-origin.md`, `docs/specs/playtest-self-check.md`
 
 ---
@@ -11,41 +11,31 @@
 
 ---
 
-## 2. 动态端口编排与反向代理机制
+## 2. 预览集成的待决契约
 
-```
-                                  浏览器 / 用户工作台
-                                          │
-                                          ▼ :3000 (前端主控)
-                   ┌──────────────────────────────────────────────┐
-                   │               Daemon Gateway                 │
-                   │      /preview/:worktree_id/* 反向代理         │
-                   └──────┬────────────────────────────────┬──────┘
-                          │                                │
-                          ▼                                ▼
-            Worktree A 隔离进程 (端口 4101)    Worktree B 隔离进程 (端口 4102)
-            ┌───────────────────────────┐    ┌───────────────────────────┐
-            │   Vite / TanStack Start   │    │        Next.js / API      │
-            │   (无外部网络，本地环境变量)  │    │   (无外部网络，本地环境变量) │
-            └───────────────────────────┘    └───────────────────────────┘
-```
+已批准的安全边界见 `docs/adr/0008-demo-isolated-origin.md` 与 `docs/specs/system-architecture.md#§4.4`：独立 Origin、随机 loopback 端口、`iframe sandbox="allow-scripts"`、不授予 `allow-same-origin`、严格 CSP 与 Origin 拒绝。任何预览编排都必须继承这些限制。
 
-### 2.1 端口分配与生命周期
-1. **端口池管理**：Daemon 维护一个动态预览端口池（默认范围：`4100 ~ 4199`）。
-2. **启动与探活（Readiness Probe）**：
-   - 当 Worker 施工完成且静态测试通过后，Daemon 在该任务对应的 Worktree 目录下执行合同声明的 `preview_command`；
-   - Daemon 每隔 500ms 探测本地端口，直到接收到 HTTP 200 或超过 15 秒超时；
-   - 探活成功后，Daemon 将状态置为 `PREVIEW_READY`，并将反向代理挂载至中栏 iframe。
-3. **隔离与销毁**：
-   - 预览进程与主 Daemon 进程解耦，运行于独立进程组；
-   - 用户点击“合入主线”或“放弃本轮”时，Daemon 向进程组发送 `SIGTERM`（超时 3 秒升级为 `SIGKILL`），回收端口与资源。
+当前需要先作出并验证的工程决定：
+
+1. 中栏试玩是否复用现有 Demo 预览，还是增加“Worker Worktree 真机预览”这一不同模式；
+2. 若新增 Worktree 预览，如何安全构建、启动、探活、关闭，如何与 Evidence 中的代码快照绑定；
+3. 端口分配/代理、生命周期状态、失败可观测性与资源回收的现有实现分别在哪里，是否已有代码。
+
+本节不指定端口池、反向代理或跨项目框架约定，避免与 ADR-0008 冲突或把未批准实现伪装成既定事实。
+
+### 2.1 最低验收问题
+
+- 预览 URL 明确绑定到本轮合同、Worktree、commit/snapshot 与 Evidence；
+- 用户能实际交互，且 iframe 不获得控制台或 Daemon API 权限；
+- 预览进程退出、超时、崩溃和用户结束本轮时可观测并可清理；
+- 预览所用依赖、数据与环境不得写入主工作区或真实生产数据。
+
+具体实现方式须先与当前 `src/lib/ipc/real-preview-origin.ts`、`src/components/studio/DemoPreviewPane.tsx` 和 ADR-0008 核对。
 
 ---
 
-## 3. 前后端联调沙盒与 Mock 降级
+## 3. 前后端联调与 Mock 降级（待与项目支持边界对齐）
 
 对于涉及后端 API 或外部服务的复杂项目，预览环境支持三级降级联调策略：
 
-1. **同构全栈（Fullstack Local）**：若项目为 TanStack Start / Next.js 全栈项目，直接在单一进程中拉起前端与 Server Functions；
-2. **API 拦截沙盒（Service Mocking）**：对于需要第三方外部调用的场景，Daemon 自动注入 Mock Service Worker (MSW) 或轻量代理拦截器，保证在断网环境下预览界面依然能够响应交互；
-3. **只读数据隔离（Isolated SQLite/LocalDB）**：施工 Worktree 复制一份测试专用本地数据库，杜绝预览改动污染用户主分支数据。
+在确定 Stagent 支持的项目类型后，再定义全栈本地运行、服务 Mock 与测试数据隔离策略。当前不得假定所有被打开的仓库都是 TanStack/Next，也不得自动复制或修改未知数据库。每种 Stub/Mock 必须记录模拟范围、未覆盖行为与转真实实现条件。

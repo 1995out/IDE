@@ -1,6 +1,6 @@
 # Software Contract 核心第一性原理与生命周期契约 (software-contract-lifecycle.md)
 
-> **修订状态**：ACTIVE (依据 ADR-0014 补充，确立 Stagent 全链路基石)  
+> **状态**：PROPOSED — 概念说明，不取代 `SoftwareContractV13`、`SoftwareContractV20` 或 `SchemeDraftV2`；版本关系须另行裁决。
 > **关联架构**：`docs/adr/0014-three-agent-topology-open-supervisor.md`, `docs/rfc/v0.2-multi-agent-pipeline.md`
 
 ---
@@ -9,9 +9,9 @@
 
 > **“任何满足「可观察、可边界、可冻结、可验证」的业务意图，都可以被编译为 Software Contract；Software Contract 可以授权 Agent 在受控范围内生成、修改、验证软件，并输出 Evidence Bundle。”**
 
-### 1.1 业务意图形式化四要素充要判定
+### 1.1 四要素的操作化问题（不是已批准的充要谓词）
 
-一个业务意图只有同时满足以下四项判定谓词，意图编译器才允许将其固化为 `SoftwareContract`：
+RFC v0.2 使用这四个词描述可编译意图，但当前权威文档没有给出完整的充要谓词。下表是供规格收敛使用的候选定义，不可作为已实现的阻断规则：
 
 | 要素 | 核心含义 | 形式化判定谓词 (Compiler Predicate) | 反例（不可编译） |
 | :--- | :--- | :--- | :--- |
@@ -24,7 +24,7 @@
 
 ## 2. Software Contract 的三重法定属性
 
-`SoftwareContract` 是系统从“自然语言对话”进入“受控代码施工”的**唯一中介表示 (IR)**，它具有三位一体的法定属性：
+Contract 目标上承接用户意图、施工授权与确定性验收，但仓库当前同时存在 `SoftwareContractV13`、RFC 中的 `SoftwareContractV20` 和 UI 层 `SchemeDraftV2`。它们是否同一对象、如何映射、哪一个是唯一运行时授权事实源，必须由后续 ADR/Schema 变更决定；本文件不宣称已完成统一。
 
 ```
                     ┌─────────────────────────┐
@@ -54,55 +54,12 @@
 
 ---
 
-## 3. 契约数据结构定义 (`SoftwareContractV21`)
+## 3. Schema 演进待决项（本文件不新增运行时 Schema）
 
-```typescript
-export interface SoftwareContractV21 {
-  schema_version: "2.1.0";
-  contract_id: string;             // 唯一合同编号，如 "contract-20261030-darkmode"
-  title: string;                   // 业务功能白话标题
-  intent: {
-    user_prompt_summary: string;  // 用户原始意图提炼
-    q_refs: string[];              // 绑定的原话引用编号（q12, q13...）
-    observable_behaviors: string[];// 可观察行为清单
-  };
-  authorization: {
-    granted_by: "USER";
-    granted_at: string;            // ISO 8601 时间戳
-    status: "APPROVED" | "PENDING" | "REJECTED";
-    writable_paths: string[];      // 物理写权限白名单（Glob 格式）
-    forbidden_paths: string[];     // 物理绝对禁区（如 .git, daemon/, keys）
-  };
-  task_dag: {
-    tasks: SubTaskDefinition[];    // 细粒度子任务拓扑（Schema-First 机制）
-  };
-  verification_spec: {
-    commands: Array<{
-      cmd: string;
-      argv: string[];
-      timeout_seconds: number;
-    }>;
-    playtest: {
-      required: boolean;
-      preview_command?: string;    // 如 "npm run dev"
-      preview_port?: number;       // 动态分配的端口
-      route_path?: string;         // 验收 URL 路径
-      expected_elements: string[]; // 试玩验收断言提示
-    };
-  };
-  budget_limits: {
-    max_duration_seconds: number;
-    max_model_tokens: number;
-    max_cost_cents?: number;
-  };
-}
+当前可查到的基线：
 
-export interface SubTaskDefinition {
-  task_id: string;                 // 如 "task-0-types", "task-1-frontend"
-  title: string;
-  kind: "SCHEMA" | "BACKEND" | "FRONTEND" | "TEST" | "CONFIG";
-  depends_on: string[];            // 前置依赖 ID 数组
-  worker_prompt: string;           // 针对该独立 Worker 的精准施工提示
-  assigned_paths: string[];        // 本子任务严格限制的写路径
-}
-```
+- `SoftwareContractV13`：`src/lib/contract.schema.ts` 与 `docs/specs/system-architecture.md#§9.1`；
+- `SoftwareContractV20`：`docs/rfc/v0.2-multi-agent-pipeline.md#§4.1` 的目标演进；
+- `SchemeDraftV2` / `SchemePatch`：Supervisor 的方案 UI 与意图编译表示。
+
+在完成兼容策略前，不应新增名为 `SoftwareContractV21` 的第二套运行时类型，也不应让它替代既有合同 Schema。需在后续决策中明确：迁移版本、草案到已签合同的映射、用户授权记录、子任务授权子集、验证命令和 Evidence 的合同绑定。

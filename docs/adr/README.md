@@ -25,6 +25,7 @@
 | 0011 | [无 Git 审计侧车统一落点 `.stagent/records/{contract_id}/`](./0011-audit-sidecar-records-path.md) | ACCEPTED | Top7 §7 `.stagent/metadata/` |
 | 0012 | [`MERGED` 为唯一运行时交付终态](./0012-merged-as-terminal-state.md) | ACCEPTED | Spec Freeze §2.1 / DocGov §3.1 的 `DELIVERED` |
 | 0013 | [Claude Code 隔离弃用 `--bare`，改用 `--setting-sources ""`](./0013-cli-isolation-without-bare.md) | ACCEPTED | W.5a 早期 `--bare` 方案 |
+| 0014 | [三 Agent 拓扑与中栏意图编译组件化（形态开放）](./0014-three-agent-topology-open-supervisor.md) | ACCEPTED | conf-1/conf-5/conf-6 用户裁决（q12～q16） |
 
 ---
 

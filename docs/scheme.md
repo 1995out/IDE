@@ -7,7 +7,7 @@
 | 字段 | 值 |
 | :--- | :--- |
 | `scheme_id` | `stagent-self` |
-| `scheme_revision` | 1（2026-10-29 文档治理首版） |
+| `scheme_revision` | 2（2026-10-30 用户拍板确权版） |
 | `frozen` | `false`——方案仍在演进；冻结点由用户「确认方案」决定 |
 | `title` | 只说需求与偏好，其余交给 Agent 的本地编程工作台 |
 | `audience` | 能说清「想要什么」、但不想做技术决策的人（含非技术业务用户） |
@@ -35,6 +35,11 @@
 | q9 | U1 | 目前我就是按照docs来进行开发的。 |
 | q10 | U1 | 整治后的文档本身，就是 Stagent 的 supervisor 读取用户模糊意图后需要生成的文档的形态样板 |
 | q11 | U1 | 过程中不要向我提问，按你的判断做。 |
+| q12 | U2 | conf-1：中栏为"意图编译组件"，实现形态开放，不锁死 Claude Code |
+| q13 | U2 | conf-5：审阅内容后置到验收幕，保留"确认开工"与"合入"两次授权点击，保护清单等安全门禁不放宽 |
+| q14 | U2 | conf-6：为 Worker 开受控只读网络通道，必须绑定凭据保险库（Vault）一起实施，账密禁止进入对话上下文 |
+| q15 | U2 | 右栏恢复完全自由对话体验，剥离写死的架构师人设与暗中拼入的消息前缀 |
+| q16 | U2 | 选 A——我先在 GitHub 合入 PR #1，之后按白话拍板推进第 2 步。 |
 
 **已落盘的用户裁决**（不是本轮原话，但属于 `user_confirmed`，可作证据）：
 
@@ -112,24 +117,24 @@
 
 | id | question | recommended | alternatives | rationale | risk | status | evidence |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| dec-1 | 「Supervisor 生成的机器指令」具体是什么？ | 签署后的**合同 + 任务图节点**：Supervisor 起草，用户在画布确认，Daemon 派发给 Worker。 | Supervisor 直接给 Worker 发自由文本 prompt | 后者让「提建议的人」同时指挥执行，ADR-0007 分权失效。前者与 q7「直接执行」不冲突：用户确认后无需再介入。 | low | `pending` | q7；ADR-0007 |
-| dec-2 | 用户的「主观偏好」放在方案哪里？ | 作为 `goals` / `acceptance` 中 `check: playtest` 的条目，由用户试玩判定。 | 单独建偏好字段 | 偏好只能由人判，正好对应试玩验收；不必扩 Schema。 | low | `pending` | q1 |
-| dec-3 | 三 Agent 拓扑要不要写成 ADR？ | 本方案确认后写 ADR-0014「三 Agent 拓扑：右栏无提示只读脑暴 / 中栏 Supervisor 画布 / Worktree Worker」。 | 只留在本文 | ADR 才能单独 supersede ADR-0007 中「需求 AI 与 Supervisor 允许共用会话」一句。 | high | `pending` | q4～q7 |
+| dec-1 | 「Supervisor 生成的机器指令」具体是什么？ | 签署后的**合同 + 任务图节点**：Supervisor 起草，用户在画布确认，Daemon 派发给 Worker。 | Supervisor 直接给 Worker 发自由文本 prompt | 后者让「提建议的人」同时指挥执行，ADR-0007 分权失效。前者与 q7「直接执行」不冲突：用户确认后无需再介入。 | low | `user_confirmed` | q7、q13；ADR-0007 |
+| dec-2 | 用户的「主观偏好」放在方案哪里？ | 作为 `goals` / `acceptance` 中 `check: playtest` 的条目，由用户试玩判定。 | 单独建偏好字段 | 偏好只能由人判，正好对应试玩验收；不必扩 Schema。 | low | `user_confirmed` | q1、q13 |
+| dec-3 | 三 Agent 拓扑要不要写成 ADR？ | 本方案确认后写 ADR-0014「三 Agent 拓扑与意图编译组件化：中栏形态开放 / 右栏无系统提示脑暴 / Worktree Worker 隔离施工」。 | 只留在本文 | ADR 才能单独 supersede ADR-0007 中「需求 AI 与 Supervisor 允许共用会话」一句。 | high | `user_confirmed` | q4～q7、q12；ADR-0014 |
 | dec-4 | `development-tasks.md`（约 460KB）要不要拆？ | 拆成「卡号索引 + 活跃卡 + 已完成卡 + 修订流水」，卡号不变。 | 维持单文件 | 约 65% 是已完成卡的历史，仍要执行的 J 系列只占约 15%；但拆分会与正在进行的 PR 冲突，需择时。 | low | `pending` | q9；[`ledger/README.md`](./ledger/README.md) DOC-1 |
 
 ## 7. 分歧（`conflicts[]`）——原话与现行规格打架的地方
 
 > 冲突卡只摆事实与选项，`chosen_id` 一律为空：**Agent 不替用户选**（INV-LEDGER-02 代选择阻断）。
 
-| id | question | 选项 A | 选项 B | chosen_id | evidence |
+| id | question | 选项 A | 选项 B | chosen_id | evidence / 用户裁决依据 |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| conf-1 | 中栏 Supervisor 用什么实现？ | **Claude Code 只读会话**做编译器，输出仍限定为 `SchemePatch` JSON，经 Daemon 确定性合并（q6） | 维持现状：规则 L0（`daemon/supervisor/rules-l0.ts`）+ 单次模型增强（`enrich-openai.ts`），模块受零工具 AST lint 约束 | `null` | q6；`daemon/supervisor/index.ts` 文件头；ADR-0007 补充纪律 1 |
-| conf-2 | 右栏「不设置系统 prompt」与 `partner_hint` 通道 | 删掉 `partner_hint`：右栏不注入方案摘要、冲突或编译器提示（与 supervisor §14.5 一致） | 保留 `partner_hint` 作为可选的窄通道（intent-compiler §5.2、supervisor §14.3） | `null` | q5；supervisor §14.5 vs §14.3、intent-compiler §5.2 |
-| conf-3 | Supervisor 只经画布说话，还是也借右栏说话？ | 只经画布：§16.3 / §16.5 / §16.7 里「右栏插入系统消息」「搭档一句话确认」改为画布卡片 | 允许少量右栏系统消息 | `null` | q6；supervisor §16.3、§16.5、§16.7 |
-| conf-4 | 右栏 Agent 的人设 | 无人设：按原样使用引擎（q5 原话「不设置系统prompt」） | 保留「懂产品的高级架构师」定位（supervisor §13.2） | `null` | q5；supervisor §13.2 |
-| conf-5 | 「不参与任何技术决策」与现行审批点 | 技术选择一律由 Supervisor 给推荐并默认采纳；用户只在**不可逆或越权**处点头（敏感路径、扩范围、超预算） | 维持现行：`needs_approval` 逐项表态、D-1 冲突二选一、PAUSED 菜单 | `null` | q1、q2；supervisor §13.3、§15；ADR-0001 单向约束 |
-| conf-6 | 复刻网站需要联网与登录凭据，现行工具集全部禁网 | 为「读参考站」单独设计受控能力：只读抓取、凭据走 Daemon 托管、不进合同与日志 | 维持禁网：北极星场景暂不支持 | `null` | q2；`claude-code-adapter.ts` 的 `ALWAYS_DENY`（WebFetch / WebSearch）；J.1 禁联网；runtime §5 |
-| conf-7 | 右栏能否只读执行命令（如 `git log`）辅助脑暴？ | 不能：维持 J.1 的 `Read,Glob,Grep` 精确白名单 | 能：增加只读命令白名单 | `null` | q5「读取仓库的文件」；J.1 |
+| conf-1 | 中栏 Supervisor 用什么实现？ | **Claude Code 只读会话**做编译器，输出仍限定为 `SchemePatch` JSON，经 Daemon 确定性合并（q6） | 维持现状：规则 L0（`daemon/supervisor/rules-l0.ts`）+ 单次模型增强（`enrich-openai.ts`），模块受零工具 AST lint 约束 | **裁决：形态开放** | q12 用户拍板：中栏为"意图编译组件"，实现形态开放，不锁死 Claude Code，只要能产出结构化施工指令即可，立项 ADR-0014 |
+| conf-2 | 右栏「不设置系统 prompt」与 `partner_hint` 通道 | 删掉 `partner_hint`：右栏不注入方案摘要、冲突或编译器提示（与 supervisor §14.5 一致） | 保留 `partner_hint` 作为可选的窄通道（intent-compiler §5.2、supervisor §14.3） | **选项 A** | q5、q15 用户拍板：剥离暗中拼入的消息与前缀，右栏保持纯粹只读自由对话 |
+| conf-3 | Supervisor 只经画布说话，还是也借右栏说话？ | 只经画布：§16.3 / §16.5 / §16.7 里「右栏插入系统消息」「搭档一句话确认」改为画布卡片 | 允许少量右栏系统消息 | **选项 A** | q6 用户原话：中栏 Supervisor 只通过画布（canvas）交互，不在右栏插话 |
+| conf-4 | 右栏 Agent 的人设 | 无人设：按原样使用引擎（q5 原话「不设置系统prompt」） | 保留「懂产品的高级架构师」定位（supervisor §13.2） | **选项 A** | q5、q15 用户拍板：剥离高级架构师写死人设，按原样使用成熟 Agent 引擎自由脑暴 |
+| conf-5 | 「不参与任何技术决策」与现行审批点 | 技术选择一律由 Supervisor 给推荐并默认采纳；用户只在**不可逆或越权**处点头（敏感路径、扩范围、超预算） | 维持现行：`needs_approval` 逐项表态、D-1 冲突二选一、PAUSED 菜单 | **裁决：分级委托** | q13 用户拍板：审阅内容（路径树、技术细节）后置到验收幕；"确认开工"与"合入"两次授权点击保留；底层物理保护清单与写白名单不放宽 |
+| conf-6 | 复刻网站需要联网与登录凭据，现行工具集全部禁网 | 为「读参考站」单独设计受控能力：只读抓取、凭据走 Daemon 托管、不进合同与日志 | 维持禁网：北极星场景暂不支持 | **裁决：受控+Vault** | q14 用户拍板：为 Worker 开受控只读网络通道，必须强绑定凭据保险库（Vault）一起实施，账密严禁进入对话上下文 |
+| conf-7 | 右栏能否只读执行命令（如 `git log`）辅助脑暴？ | 不能：维持 J.1 的 `Read,Glob,Grep` 精确白名单 | 能：增加只读命令白名单 | **选项 A** | q5、R-OP28：右栏严格只读防穿透，维持精确文件读取白名单 |
 
 ## 8. 待澄清（`open_questions[]`，软提醒，不阻断）
 

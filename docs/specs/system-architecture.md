@@ -8,6 +8,7 @@
 > **基线代码对照**：`daemon/`、`src/lib/contract.schema.ts`（当前代码基线为 Schema v1.2.0，目标模型 v1.3.0 显式归入 §10 路线图 P0.2c 阶段）、`src/lib/evidence.schema.ts`、`src/lib/state-machine.ts`、`tests/unit/state-machine-matrix.test.ts`  
 > **修订核心目标**：严格对齐代码实现事实与目标架构演进路线；闭环 Fast Path 状态机流转（杜绝跳过 `PREPARING`，规范熔断两步法为升版挂起，杜绝非法逆向边）、收敛数据迁移白名单并确立“零静默授权”不变式、彻底根除 AST 模糊术语、在类型系统层面彻底剥离 Supervisor 提案运行态字段、强化挂起恢复自愈与外部改码级联降级门禁，确立生产级落地与迁移工程规范。
 > **2026-10-28 口径补充**：C-3（§0.2.3.1 Worktree 例外指针）、C-4（§6.4 D-3 白话二选）、C-5（§6.4 D-1 计数口径）已拍板，依据 supervisor 第三部分 §16.11 与审计台账。本次为裁决落笔，未改变基线版本号。上一轮审计漏网的「低置信度降级」旧口径已按 supervisor §16.7 修正（consistency-audit OP-20）。
+> **2026-10-29 角色口径指针（文档治理加注，不改条款）**：本文 §0.2 步骤一「交互载体：右栏智能助手（Supervisor）」、§1 拓扑「Coding Worker / Supervisor 澄清会话」、§2.1「用户与 Supervisor 的自然语言交互流」把右栏写成 Supervisor 或 Worker，均为旧口径。现行三 Agent 分工：右栏 = 只读 AI 搭档，中栏 = Supervisor 方案画布，Worker = Worktree 施工，以 [`supervisor.md`](./supervisor.md) §13.2 与 [`../scheme.md`](../scheme.md) §3 为准；未决分歧见 `scheme.md` §7。
 
 ---
 

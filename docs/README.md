@@ -1,97 +1,137 @@
 # Stagent 文档地图
 
-> **更新日期**：2026-10-27（Asia/Hong_Kong）· 文档治理重组
-> **命名约定**：文件名**不含版本号与日期后缀**，统一英文 kebab-case；版本流转交由 **Git Tag 与 commit 历史**承载，每份规范在文件头标注定稿基线版本。
-> **本次重组做了什么**：40 份文档 → **4 份现行规范 + 13 篇 ADR + 2 份 RFC + 3 份签收报告 + 17 份归档 + 1 份 backlog + 5 份模板**。删除 5 份 11 行 stub 短桩与 1 个 `.DS_Store`；把同一份 Supervisor SSOT 的 3 个物理文件合流为 1 份；修复 8 处指向已删除文件的悬空引用。
+> **更新**：2026-10-29（Asia/Hong_Kong）· 文档治理第二轮：按 Supervisor 产物的形态重排。
+> **一句话**：这套文档就是 Stagent 的 Supervisor 读完用户模糊意图后**应该交出的东西**。从用户原话出发，逐层推到决策、规格、给 Worker 的任务卡、证据和台账。每层都能往上追到原话，往下追到代码。
+> **命名约定**（沿用）：文件名英文 kebab-case，不含版本号与日期；版本流转交给 Git Tag 与 commit 历史；规格文件头标注定稿基线。
 
 ---
 
-## 0. 三条铁律（先看这里）
+## 0. 三条铁律
 
-1. **施工权威只有四份**：`specs/` 下的 `system-architecture.md`、`development-tasks.md`、`supervisor.md`、`runtime-contract-and-safety.md。写代码只认这四份 + 任务卡。
-2. **`backlog/` 不是权威**。`backlog/` 是仍要修的待办清单，与现行规范冲突时一律以现行规范为准。原 `archive/` 过程稿目录已移除，历史脉络查 Git 历史。
-3. **`rfc/` 不是规范**。RFC 是未批准/未实现的提案，其中条款**不具备**标记 `COMPLETED` 的资格。
-
----
-
-## 1. 现行规范（`specs/`）· 施工权威
-
-| 文件 | 主题 | 定稿基线 |
-| :--- | :--- | :--- |
-| [`specs/system-architecture.md`](./specs/system-architecture.md) | 架构宪法：产品定义、系统拓扑、分层职责、安全网关、Git/Worktree、状态机、数据模型、路线图 | v1.6.1（commit `4280de6`） |
-| [`specs/development-tasks.md`](./specs/development-tasks.md) | 任务卡：87 张卡、DAG 依赖、Sprint 排期、修订流水 | v1.6.2 |
-| [`specs/supervisor.md`](./specs/supervisor.md) | Supervisor 单一事实源（SSOT）：产品与监理语义；由 v2.0 正文 + v2.0.2 裁定层**物理合流**而成；**第三部分（v2.1）**定义意图编译器、《改动范围与验收方式》与确认后单页四幕旅程。**用户旅程以本文为准**，架构规范 §0.2 / §7.1 的旧旅程已加取代标注 | v2.1 |
-| [`specs/runtime-contract-and-safety.md`](./specs/runtime-contract-and-safety.md) | 运行时硬契约：合同护照、Scope/通配分级、P.1 保护清单、Token/越界熔断、审计侧车、终态与清理、错误码分层 | 2026-10-27 新建（收口自 6 处散落条文） |
-
-> **附属实施口径**（不是第五份权威，从属于所指的上位规格，冲突时以上位规格为准）：[`specs/scheme-patch-engine.md`](./specs/scheme-patch-engine.md)——`supervisor.md` §14.2 / §14.3 / §14.11 的 SchemePatch 零模型合并引擎判定树、引用锚定、墓地复活与测试矩阵（`TASK-J.9`）。[`specs/intent-compiler-prompt.md`](./specs/intent-compiler-prompt.md)——`supervisor.md` §14.4～§14.9 的意图编译器 System Prompt、生成 Schema、原话摘录协议与对抗性金标种子（`TASK-J.10` / J.11）。[`specs/worker-graveyard-gate.md`](./specs/worker-graveyard-gate.md)——`supervisor.md` §14.11 INV-LEDGER-03 的 Worker 派工墓地门禁、四防线优先级与 G-MATCH 双投影测试矩阵（`TASK-J.18`）。[`specs/playtest-self-check.md`](./specs/playtest-self-check.md)——`supervisor.md` §16.7 试玩自查引擎的规格与对现行 `dispute` 实现的差距登记（`TASK-J.16`）。[`specs/constants-and-paths.md`](./specs/constants-and-paths.md) 与 [`specs/state-machine-contract.md`](./specs/state-machine-contract.md) 为「待核验目标规范草案」，同样不是第五份权威，冲突时以四份现行规范为准。
-
-> **审计台账与试玩口径**：[`specs/playtest-self-check.md`](./specs/playtest-self-check.md)——`supervisor.md` §16.7 试玩自查引擎实施口径（实施卡 `TASK-J.16`）。[`specs/consistency-audit.md`](./specs/consistency-audit.md)——规格一致性审计台账：待裁决矛盾、机械修复、挂账项与权威分层（审计记录，不是权威来源）。
+1. **意图看 [`scheme.md`](./scheme.md)，施工看 `specs/` + 任务卡。** 方案说「要什么」；只有 `specs/` 四份现行规范与任务卡能当写代码的依据。
+2. **用户说过的才算数。** 任何文档里，Agent 的推断都要标成推断；分歧摆出选项，不替用户选；被否决的方案进墓地，不得悄悄复活。
+3. **台账、提案、模板都不是权威。** `ledger/` 是欠账，`rfc/` 是未批准提案，`templates/` 是空白格式。三者与 `specs/`、`adr/` 冲突时，一律以后者为准。
 
 ---
 
-## 2. 架构决策记录（`adr/`）· 13 篇
+## 1. 分层总览：文档 = Supervisor 的产物
 
-[`adr/README.md`](./adr/README.md) — ADR-0001～0009 从架构规范 §8 原样抽出；**0010～0013 为本轮补录**：
+用户只管说需求（右栏），Supervisor 旁观并整理成方案（中栏画布），确认后 Worker 在 Worktree 里施工，Daemon 出证据。文档体系照这条链分层：
 
-- [0010](./adr/0010-demo-optional-not-hard-gate.md) Demo 降为体验增强项，允许跳过 Demo 直签
-- [0011](./adr/0011-audit-sidecar-records-path.md) 审计侧车统一 `.stagent/records/{contract_id}/`
-- [0012](./adr/0012-merged-as-terminal-state.md) `MERGED` 为唯一运行时终态
-- [0013](./adr/0013-cli-isolation-without-bare.md) Claude Code 隔离弃用 `--bare`（被 `daemon/worker/cli-host/claude-code-adapter.ts` 强依赖）
+| 层 | 回答什么 | Supervisor 产物 | 本仓落点 | 谁能改 |
+| :--- | :--- | :--- | :--- | :--- |
+| **L0 意图** | 用户要什么、为什么；哪些还没定 | 原话摘录 + `SchemeDraftV2` | [`scheme.md`](./scheme.md) | 原话只能追加；`ai_inferred` 条目经用户确认才升格 |
+| **L1 决策** | 已拍板、难逆转的技术选择 | `decisions[]`（已确认） | [`adr/`](./adr/README.md) | 只能 SUPERSEDE，不能删改原文 |
+| **L2 规格** | 系统必须怎样表现（契约） | 冻结快照 + `ScopePlan` | `specs/`（见 §3） | 走规格修订任务卡 |
+| **L3 任务卡** | 交给 Worker 的机器指令 | 合同 + 任务图节点 | [`specs/development-tasks.md`](./specs/development-tasks.md) | 按卡施工，按 §10 判定口径回写状态 |
+| **L4 证据** | 做到了没有，凭什么说做到了 | `EvidenceBundle` | [`reports/`](./reports/README.md)、[`specs/evidence-and-acceptance-criteria.md`](./specs/evidence-and-acceptance-criteria.md)（草案） | 只追加；证据绑定 head SHA |
+| **L5 台账** | 还欠什么、谁来定 | `conflicts` / `open_questions` / 挂账 | [`ledger/`](./ledger/README.md) | 只追加；销项要注明 PR |
+| 旁支 | 未批准的远期提案 | — | `rfc/`（见 §6） | 立项后才进 L1 / L2 |
+| 旁支 | 空白格式 | — | `templates/`（见 §7） | — |
+
+**往上追**：任何规格条款或任务卡，都应能回答「对应 `scheme.md` 哪一条目标或模块」。答不出来的，要么补依据，要么是范围蔓延。
+**往下追**：`scheme.md` §11 落差登记把每条目标映射到任务卡；任务卡再绑定测试与证据。
 
 ---
 
-## 3. 提案（`rfc/`）· 未批准
+## 2. 阅读顺序
 
-| 文件 | 主题 | 状态 |
-| :--- | :--- | :--- |
-| [`rfc/v0.2-multi-agent-pipeline.md`](./rfc/v0.2-multi-agent-pipeline.md) | v0.2 多 Agent 编译流水线、五阶段、Schema-First、并行 Worktree、三级信任模型 + 附录 A/B/C 锚定 | **DEFERRED**（RFC-2026-002，不进 v0.1） |
-| [`rfc/scheme-snapshot-and-attestation-model.md`](./rfc/scheme-snapshot-and-attestation-model.md) | Scheme 快照规范化 AST、判别联合类型、三元哈希绑定、终态清理协议 | **PROPOSED**（RFC-2026-003；代码 0 命中，**不得**当现行规范引用） |
+**第一次来（人或新会话）**：
+
+1. [`scheme.md`](./scheme.md) — 用户原话、三 Agent 设想、待你拍板的分歧（约 15 分钟）
+2. [`specs/supervisor.md`](./specs/supervisor.md) 第三部分 §13 — 一个页面、一条旅程、五个决定
+3. [`specs/runtime-contract-and-safety.md`](./specs/runtime-contract-and-safety.md) — **写代码前必读**的运行时硬契约
+4. [`adr/README.md`](./adr/README.md) — 13 条已拍板决策的索引
+5. [`specs/development-tasks.md`](./specs/development-tasks.md) §3.4c — 当前在做的 J 系列卡
+
+**要施工的 Worker**：只读第 3、5 项加卡内引用的规格节；有疑问先查 [`ledger/`](./ledger/README.md) 是否已挂账，不要自行补全。
+
+**要审阅的用户**：只看 [`scheme.md`](./scheme.md) §6～§8（决定、分歧、待澄清）。其余是 Agent 的活。
 
 ---
 
-## 4. 历史签收与封版（`reports/`）
+## 3. L2 规格（`specs/`）· 施工权威
+
+### 3.1 权威分层
+
+| 层级 | 管什么 | 文件 | 冲突时 |
+| :--- | :--- | :--- | :--- |
+| **现行规范（四份）** | 产品与契约 | [`system-architecture.md`](./specs/system-architecture.md)（架构宪法，v1.6.1；§0.2、§7.1 已由 supervisor 取代）· [`supervisor.md`](./specs/supervisor.md)（Supervisor SSOT，第三部分 v2.1 现行）· [`runtime-contract-and-safety.md`](./specs/runtime-contract-and-safety.md)（运行时硬契约）· [`development-tasks.md`](./specs/development-tasks.md)（任务卡与 DAG，v1.6.2） | 上位优先；supervisor §17 与 §7 同级 |
+| **实施口径（附属）** | 某条现行规范的实施细节 | [`scheme-patch-engine.md`](./specs/scheme-patch-engine.md)（supervisor §14.2/14.3/14.11，`TASK-J.9`）· [`intent-compiler-prompt.md`](./specs/intent-compiler-prompt.md)（§14.4～14.9，`TASK-J.10`/J.11）· [`worker-graveyard-gate.md`](./specs/worker-graveyard-gate.md)（§14.11 INV-LEDGER-03，`TASK-J.18`）· [`playtest-self-check.md`](./specs/playtest-self-check.md)（§16.7，`TASK-J.16`） | 以所指上位规格为准 |
+| **代码即权威** | 运行时事实 | `src/lib/state/delivery-state.ts`、`src/lib/journey/confirm-scheme-atomic.ts`、`daemon/supervisor/demo/signing-gate.ts`、`daemon/guard/audit-manifest.ts`、`daemon/supervisor/rules-l0.ts`、`src/lib/error-codes.ts` | 代码现状 ≠ 目标规格；差距登记在 supervisor §19 与 [`scheme.md`](./scheme.md) §11 |
+| **草案（非依据）** | 待核验 | [`constants-and-paths.md`](./specs/constants-and-paths.md)、[`state-machine-contract.md`](./specs/state-machine-contract.md)、[`evidence-and-acceptance-criteria.md`](./specs/evidence-and-acceptance-criteria.md) | 不得当现行规范引用 |
+
+> 四份实施口径的状态均为「设计定稿 · 待施工」：对应引擎文件目前都不存在。
+
+### 3.2 三个 Agent 在规格里的位置
+
+| 角色 | 用户设想（[`scheme.md`](./scheme.md) mod-1～3） | 现行权威条文 | 已知分歧 |
+| :--- | :--- | :--- | :--- |
+| 右栏 · 需求对话 Agent | Claude Code 等成熟引擎，只读，不设系统 prompt，自由脑暴 | supervisor §13.2、§14.5；`TASK-J.1` | conf-2（`partner_hint`）、conf-4（人设） |
+| 中栏 · Supervisor + 画布 | 也是 Claude Code，旁观对话，只经画布与用户交互 | supervisor §13～§16；ADR-0007 | conf-1（实现方式）、conf-3（借右栏说话） |
+| 施工 Worker | Worktree 内执行 Supervisor 生成的机器指令 | runtime §1～§5；ADR-0003、0007、0013 | dec-1（「机器指令」= 合同 + 任务图） |
+| Daemon（裁判） | 原话未提，Agent 补上 | ADR-0005、0007 | — |
+
+> `system-architecture.md` §0～§2 与任务卡 C.1 / W.1 / W.5a / C.6 / P.1 / E.1 里「右栏 = Supervisor」或「右栏 = 编码 Worker」的旧叙述，已在文件头加取代说明，原文保留。
+
+---
+
+## 4. L1 决策（`adr/`）· 13 篇
+
+索引见 [`adr/README.md`](./adr/README.md)。0001～0009 抽自架构规范 §8；0010～0013 为 2026-10-27 补录。
+方案里 `status: pending` 的决定（[`scheme.md`](./scheme.md) §6）经用户拍板后，在此新增 ADR（下一个编号 0014）。
+
+---
+
+## 5. L4 证据与历史签收（`reports/`）
 
 - [`reports/spec-freeze-record.md`](./reports/spec-freeze-record.md) — Spec Freeze 封版索引
 - [`reports/v0.1-mainline-milestone.md`](./reports/v0.1-mainline-milestone.md) — v0.1 主路径 Sign-off
 - [`reports/v0.1-hardening-closure.md`](./reports/v0.1-hardening-closure.md) — v0.1 硬化收官（Tag `v0.1.0`）
+- [`reports/J1-partner-cli-verification-2026-10-28.md`](./reports/J1-partner-cli-verification-2026-10-28.md) — `TASK-J.1` 右栏只读的真实 CLI 验证（替身模型端点）
 
 ---
 
-## 5. 待修缺口（`backlog/`）
+## 6. 提案（`rfc/`）· 未批准
 
-[`backlog/w3-known-gaps.md`](./backlog/w3-known-gaps.md) — W.3 遗留的 **2 项未修复缺口**（`tmpRoot` GC、`splitShellSegments` 引号边界盲区），均附量化 PASS/FAIL 判据。**故意留在 backlog**：它们仍是待办，不是历史。
-
----
-
-## 6. 归档（已移除）
-
-原 `archive/` 目录（含 `supervisor-pre-ssot/` 下的过程稿碎片）已整体移除，不再作为查资料的入口：其中仍有价值的设计细节已分别并入 `specs/`、`adr/`、`rfc/`，历史原文查 Git 历史（`git log --diff-filter=D -- docs/archive/`）。
+| 文件 | 主题 | 状态 |
+| :--- | :--- | :--- |
+| [`rfc/v0.2-multi-agent-pipeline.md`](./rfc/v0.2-multi-agent-pipeline.md) | v0.2 多 Agent 编译流水线、并行 Worktree、三级信任模型 + 附录 A/B/C | **DEFERRED**（RFC-2026-002）；阶段 0「右栏可写」已进墓地 REJ-001 |
+| [`rfc/scheme-snapshot-and-attestation-model.md`](./rfc/scheme-snapshot-and-attestation-model.md) | Scheme 快照 AST、三元哈希绑定、终态清理 | **PROPOSED**（RFC-2026-003）；代码 0 命中 |
 
 ---
 
-## 7. 模板（`templates/`）· 非当前施工依据
+## 7. 模板（`templates/`）
 
-> **定位声明（裁决 D-4）**：本目录是 **Supervisor 未来渲染工件的脚手架**，服务于 [`rfc/scheme-snapshot-and-attestation-model.md`](./rfc/scheme-snapshot-and-attestation-model.md) 提出的「AST → 五份 Markdown 工件」映射。
-> **⚠️ 当前不作为 Stagent 的施工依据**——该映射尚未实现（代码 0 命中）。写代码、写卡、写验收都不要引用本目录。
-
-| 文件 | 用途 |
-| :--- | :--- |
-| [`templates/00-filling-guide.md`](./templates/00-filling-guide.md) | 统一 ID 空间与填写顺序 |
-| [`templates/01-prd.md`](./templates/01-prd.md) | PRD |
-| [`templates/02-system-design-and-api-contract.md`](./templates/02-system-design-and-api-contract.md) | 系统设计与接口契约 |
-| [`templates/03-acceptance-matrix.md`](./templates/03-acceptance-matrix.md) | 验收矩阵 |
-| [`templates/04-traceability-matrix.md`](./templates/04-traceability-matrix.md) | 需求—设计—测试追溯矩阵 |
+空白的传统五件套（填写说明、PRD、系统设计、验收矩阵、追溯矩阵）。它们与 Supervisor 产物的字段对应关系见 supervisor §14.11 小节 3；**本仓自己的「填好的样板」是 [`scheme.md`](./scheme.md)**，不是这里的空表。写代码、写卡、写验收都不要引用本目录。
 
 ---
 
-## 8. 已删除的文档（勿再引用）
+## 8. 怎么改文档（像 Supervisor 一样改）
 
-下列文件在 2026-10-25 `docs/reports/` 目录精简时删除，2026-10-27 已清理全部指向它们的引用：
+| 你要做的事 | 改哪里 | 规则 |
+| :--- | :--- | :--- |
+| 用户说了新需求或新偏好 | `scheme.md` §0 追加原话，§1～§9 打补丁 | 只增不改原话；新条目标 `user_said` 并引 qid |
+| Agent 发现原话与规格打架 | `scheme.md` §7 加冲突卡 | `chosen_id` 留空，等用户选 |
+| 用户拍板了一个决定 | 新增 `adr/00NN-*.md`；`scheme.md` 把对应条目改为 `accepted` 并指向 ADR | 被取代的 ADR 标 `SUPERSEDED by`，不删 |
+| 用户否决了一个方案 | `scheme.md` §10 墓地加一行 | 写清谁否决、为什么 |
+| 规格条款要变 | 先立规格修订任务卡，再改 `specs/` | 实施口径不得反向改上位规格 |
+| 卡做完了 | 任务卡状态回写 + `reports/` 或 PR 附证据 | 按 supervisor §10 与 evidence 草案判定，不得假 COMPLETED |
+| 发现解决不了的问题 | `ledger/` 加一行 | 必须写清谁来定、判据是什么 |
 
-- `docs/reports/v0.1-dogfooding-report.md`
-- `docs/reports/phase-checklist-M1.md` … `M8.md`
-- `docs/reports/工作台交互走查-2026-10-24.md`
-- `docs/reports/W5a-真实CLI验证报告-2026-10-21.md`
-- `docs/reports/stagent-task-flow-and-comparison.md`
-- `docs/reports/` 下 5 份 Supervisor stub 短桩（2026-10-27 删除）
-- `docs/tasks/TASK-C.21-未闭环收尾-cursor-brief.md`（一次性执行指令，收尾完成后已删除）
+---
+
+## 9. 已删除或已移动（勿再引用旧路径）
+
+**2026-10-29 移动**：
+
+- `specs/consistency-audit.md` → [`ledger/consistency-audit.md`](./ledger/consistency-audit.md)（台账不是规格）
+- `backlog/` → [`ledger/`](./ledger/README.md)（含 `w3-known-gaps.md`）
+
+**更早删除**（原文查 `git log --diff-filter=D -- docs/`）：
+
+- `docs/archive/` 整个目录（含 `supervisor-pre-ssot/`、`claude-code-isolation-design.md` 等过程稿），2026-10-27 移除
+- `docs/reports/v0.1-dogfooding-report.md`、`phase-checklist-M1.md` … `M8.md`、`工作台交互走查-2026-10-24.md`、`W5a-真实CLI验证报告-2026-10-21.md`、`stagent-task-flow-and-comparison.md`、5 份 Supervisor stub 短桩，2026-10-25～27 删除
+- `docs/tasks/TASK-C.21-未闭环收尾-cursor-brief.md`（一次性执行指令）
+
+**反虚构提醒**：仓库中不存在《产品体验与技术底座设计规范 v1.1》，任何文档或代码注释都不得引用它。

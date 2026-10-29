@@ -4,10 +4,12 @@
 
 ## 文件清单与使用顺序
 
-1. `01-PRD模板.md`：产品经理定义用户、问题、范围、规则和预期结果。
-2. `02-系统设计与接口契约模板.md`：架构/技术负责人说明系统边界、数据、状态、接口、安全和运行约束。
-3. `03-验收矩阵模板.md`：产品、工程与 QA 将需求转为可观察的 Given-When-Then 验收断言。
-4. `04-追溯矩阵模板.md`：维护需求到设计、测试和验收证据的链路，检查遗漏、断链和无效测试。
+> **与 Supervisor 方案的关系（2026-10-29）**：Stagent 的 Supervisor 不按这四份空表输出，而是输出一份带原话证据的方案（`SchemeDraftV2` + 证据台账）。填好的样板见 [`../scheme.md`](../scheme.md)；字段对应见 [`../specs/supervisor.md`](../specs/supervisor.md) §14.11 小节 3。本目录保留为通用格式参考。
+
+1. [`01-prd.md`](./01-prd.md)：产品经理定义用户、问题、范围、规则和预期结果。
+2. [`02-system-design-and-api-contract.md`](./02-system-design-and-api-contract.md)：架构/技术负责人说明系统边界、数据、状态、接口、安全和运行约束。
+3. [`03-acceptance-matrix.md`](./03-acceptance-matrix.md)：产品、工程与 QA 将需求转为可观察的 Given-When-Then 验收断言。
+4. [`04-traceability-matrix.md`](./04-traceability-matrix.md)：维护需求到设计、测试和验收证据的链路，检查遗漏、断链和无效测试。
 
 建议顺序：先起草 PRD 与验收断言；架构设计据此定义约束和接口；随后补齐测试映射与追溯矩阵。需求、架构和验收可以迭代，但开工前应明确哪些决策已确认、哪些仍未决，以及未决项阻断哪些工作。
 

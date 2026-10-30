@@ -1,8 +1,8 @@
 # ADR-0017: 发布（Release）是合并之后的独立生命周期；合同终态仍是 `MERGED`
 
-> **状态**: ACCEPTED（经 PR 审阅合入生效；合入前为提案，用户可在 PR 中否决）
+> **状态**: ACCEPTED（2026-10-30 用户原话 q22 明确授权通过）
 > **日期**: 2026-10-30
-> **决策依据**: 用户目标能力 `q17`「需求理解、技术方案、功能实现、测试和部署这些环节串起来」（[`../scheme.md`](../scheme.md) §0）
+> **决策依据**: 用户目标能力 `q17`、用户授权拍板 `q22`（[`../scheme.md`](../scheme.md) §0）
 > **相关**: ADR-0006（本地优先）、ADR-0012（`MERGED` 唯一终态）、ADR-0014 §3（凭据保险库）
 > **权威正文**: [`../specs/release-and-operations.md`](../specs/release-and-operations.md)
 

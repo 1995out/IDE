@@ -2781,13 +2781,13 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **状态**：`[NEW_TASK]`
 * **一句话目标**：「能不能点确认方案」的唯一谓词把范围也算进去，前端在确认**之前**就能把所有范围问题用白话说清。
 * **范围**：
-  1. `src/lib/journey/scheme-draft.ts::evaluateSchemeConfirmation` 增加第三参数 `scopePlan: ScopePlan | null`。判定顺序（先命中先返回）：既有 `E_SCHEME_ALREADY_FROZEN` → `E_SCHEME_CONFLICTS_OPEN` → `E_SCHEME_NOT_REVIEWABLE` → Demo 四码 → **`E_SCOPE_NOT_READY`**（`scopePlan == null` 或 `scopePlan.scheme_revision !== draft.scheme_revision`）→ **`E_SCOPE_POLICY`**（`!scopePlan.grade.ok`）→ **`E_SCOPE_APPROVAL_REQUIRED`**（存在 `needs_approval[i].approved === null`）。
+  1. `src/lib/journey/scheme-draft.ts::evaluateSchemeConfirmation` 增加第三参数 `scopePlan: ScopePlan | null`。判定顺序（先命中先返回）：既有 `E_SCHEME_ALREADY_FROZEN` → `E_SCHEME_CONFLICTS_OPEN` → `E_SCHEME_NOT_REVIEWABLE` → Demo 四码 → **`E_SCOPE_NOT_READY`**（`scopePlan == null` 或 `scopePlan.scheme_revision !== draft.scheme_revision`）→ **`E_SCOPE_POLICY`**（`!scopePlan.grade.ok`）→ **`E_SCOPE_APPROVAL_REQUIRED`**（提交的 `ScopePlan` 中存在 `needs_approval[i].approved !== true` 的敏感项；依 ADR-0014 / SA-1，不再支持逐项表态，开工时一并授权）。
   2. 三个码的白话文案按 SSOT §15.5 表格原文；`E_SCOPE_POLICY` 文案须带出被拒的白话区域名（来自 `grade.rejected` 与 `areas`），**不**直接打印 glob。
   3. `canConfirmScheme` 兼容别名改为传 `null` 并在 JSDoc 标注「新代码禁止使用」——其结果将恒为 `E_SCOPE_NOT_READY`，从而迫使遗留调用点暴露出来；`grep` 全仓调用点并列入 PR 描述。
   4. `src/routes/index.tsx` 的 `schemeConfirmation` `useMemo` 暂传 `null`（真正接线在 J.5）。**本卡合入后「确认方案」按钮会显示「正在核对要改哪些地方…」而不可点**——为避免主干出现不可用窗口，本卡与 `TASK-J.5` **必须同一 PR 合入或 J.5 紧随其后**；若需单独合入，用临时开关 `SCOPE_GATE_ENABLED`（默认关）包住第 1 步新增的三条判定，J.5 合入时移除开关。
 * **非目标**：不改 Daemon（J.4）；不做 UI 区块（J.6）。
 * **验收（PASS）**：
-  - `tests/unit/scheme-confirmation-gate.test.ts` 新增 `T-GATE-012`～`T-GATE-016`：修订号不一致 → `E_SCOPE_NOT_READY`；`null` → `E_SCOPE_NOT_READY`；`grade.ok=false` → `E_SCOPE_POLICY` 且文案含白话区域名、不含 `**`；有未表态敏感项 → `E_SCOPE_APPROVAL_REQUIRED`；全部满足 → `ok`。
+  - `tests/unit/scheme-confirmation-gate.test.ts` 新增 `T-GATE-012`～`T-GATE-016`：修订号不一致 → `E_SCOPE_NOT_READY`；`null` → `E_SCOPE_NOT_READY`；`grade.ok=false` → `E_SCOPE_POLICY` 且文案含白话区域名、不含 `**`；存在未授权敏感项（`approved !== true`） → `E_SCOPE_APPROVAL_REQUIRED`；全部满足 → `ok`。
   - 判定顺序用例：有 OPEN 冲突且范围未就绪时返回 `E_SCHEME_CONFLICTS_OPEN`（冲突优先）。
   - 既有 `T-GATE-001`～`011` 在传入合规 `scopePlan` 夹具后全部不回归。
 * **FAIL**：存在第二套范围判断（UI 自行推导 `disabled`）；或谓词读取 `completeness`。
@@ -2834,7 +2834,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **对照痛点（代码事实）**：`src/routes/index.tsx::handleConfirmScheme` 在事务开始前用 `formatSchemeAsIntent` → `submitJourneyMessage` 生成合同骨架，再在 `signAndPrepare` 里 `createContractWithAdmission`——范围从未展示给用户，且失败发生在右栏已锁之后。
 * **一句话目标**：方案每变一次就预检一次；确认时只冻结、只按快照建合同；任何范围问题都在点击前暴露。
 * **范围**：
-  1. `Console()` 新增 `scopePlan` 状态：`schemeDraft.scheme_revision` 或用户范围表态变化后 300ms 防抖调用 `preflightScope()`；在途请求被新修订作废；结果修订号不匹配时丢弃。
+  1. `Console()` 新增 `scopePlan` 状态：`schemeDraft.scheme_revision` 变化后 300ms 防抖调用 `preflightScope()`（依 ADR-0014 审阅后置，无开工前逐项表态交互）；在途请求被新修订作废；结果修订号不匹配时丢弃。
   2. `schemeConfirmation` `useMemo` 传入 `scopePlan`（替换 J.3 的 `null`，移除 `SCOPE_GATE_ENABLED` 开关）。
   3. 删除事务前的 `formatSchemeAsIntent` → `submitJourneyMessage` 合同推断块。`persistSnapshot` 发送 `scope_plan`；`signAndPrepare` 用 `scopePlanToContractScope(scopePlan)` 与方案标题 / 摘要组装合同后调用 `createContractWithAdmission(..., { confirmationId })`。
   4. `src/lib/journey/confirm-scheme-atomic.ts`：`persistSnapshot` 抛出 `409 E_SCOPE_PLAN_DRIFT` 时，事务结果码为 `E_SCOPE_PLAN_DRIFT`，执行 `restoreRightChat`（右栏解锁），**不进入** `SIGN_AND_PREPARE`；调用方用响应附带的新 plan 刷新 `scopePlan` 并显示 SSOT §16.3 白话「项目刚刚有变化，我重新核对了改动范围，请再看一眼」。
@@ -2858,20 +2858,20 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **前置依赖**：`TASK-J.5`
 * **优先级**：P1
 * **状态**：`[NEW_TASK]`
-* **一句话目标**：用户在点「确认方案」之前，用白话看清并能调整这一轮改哪里、不碰哪里、哪些敏感处要点头、怎么算做完、多大规模。
+* **一句话目标**：用户在点「确认开工」之前，用三行白话看清改动概览（大概改 N 处、不碰 M 处、怎么算做完、预计规模）；如有敏感项，显示白话敏感项与「不碰这些」按钮；具体路径树与命令明细后置到试玩验收幕只读展示。
 * **范围**：
   1. 新建 `src/components/studio/ScopeAcceptanceBlock.tsx`，插入 `SchemeReviewPane` 的决议区之后、「生成 Demo」之前（SSOT §15.2 顺序）。
-  2. 五块内容按 SSOT §15.4 线框：**会改动的地方**（`areas`：白话名 + 理由 + 「不要改这里」按钮；路径收在「展开看具体文件」折叠里）、**这次不会碰**（`never_touch` 白话分组）、**需要你点头**（`needs_approval` 每项「可以 / 不行」）、**怎么算做完**（本批取 `L0DraftPlan.acceptance_criteria` 映射为「你试玩时看」条目 + `verification.plain` 映射为「系统自动检查」条目；`manual_only` 时显示「这个项目没有自动检查…」）、**预计规模**（`budget.plain`）。
-  3. 「不要改这里」/「可以」/「不行」调用 `applyScopeDecisions` 的入参并触发 J.5 的预检；表态被视为用户编辑（参与方案 pin 语义，不被自动整理覆盖）。
-  4. `E_SCOPE_POLICY` 时，区块顶部显示谓词返回的白话说明；`E_SCOPE_APPROVAL_REQUIRED` 时，点「确认方案」自动滚动并高亮第一个未表态项。
+  2. [ADR-0014 / SA-1 条款级重写] 开工前仅展示三行白话概览：1) 改动概览（大概改 N 处、不碰 M 处；不展示路径树与区域按钮）；2) 验收方式（怎么算做完）；3) 预计规模（预计多大）。如有用户点名的敏感项，展示「含 N 处敏感改动：<白话名>」与「不碰这些，其余照做」按钮。原设计的完整清单与路径树后置到验收幕只读展示。原设计的「每项『可以/不行』」物理废止删除。
+  3. [ADR-0014 / SA-1 条款级重写] 物理删除「不要改这里」与逐项「可以/不行」按钮；仅保留「不碰这些，其余照做」按钮（以 `excluded_area_ids` 重新预检，将敏感项移入 `never_touch`）。「确认开工」点击时通过 `applyScopeDecisions` 一并记录授权并提交。
+  4. `E_SCOPE_POLICY` 时，区块顶部显示谓词返回的白话说明；`E_SCOPE_APPROVAL_REQUIRED` 时，点「确认开工」提示敏感项未授权并展开查看。
   5. 方案冻结后区块只读，表态按钮隐藏。
 * **非目标**：不接意图编译器的 `acceptance[]`（第二批）；不提供手写 glob 输入框（SSOT §15.4 明确禁止）。
 * **验收（PASS）**：新增 `tests/ui/scope-acceptance-block.test.tsx`（对应 SSOT `S2-08`）：
-  - 渲染五块标题；路径默认不可见、展开后可见。
+  - 渲染开工前三行白话概览；开工前不含路径树及区域级按钮。
   - 文案中不出现 `token`、`tool`、`**`、`glob`（大小写不敏感）。
-  - 点「不要改这里」→ 以 `excluded_area_ids` 触发预检；点「可以」→ 以 `approvals` 触发预检。
+  - 点「不碰这些，其余照做」→ 以 `excluded_area_ids` 触发预检；开工点击 → 一键授权敏感项并带 `plan_digest` 提交。
   - `manual_only` 夹具显示「没有自动检查」提示。
-  - 冻结态下无任何表态按钮。
+  - 冻结态与验收幕下清单完整且只读。
   - `tests/ui/task-c18-scheme-single-pane.test.tsx` 与 `task-c22` 不回归。
 * **FAIL**：区块显示技术单位或原始合同 JSON；或用户表态未进入预检。
 * **关键文件**：`src/components/studio/ScopeAcceptanceBlock.tsx`（新）、`src/components/studio/SchemeReviewPane.tsx`、`src/routes/index.tsx`
@@ -2892,13 +2892,13 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **范围**：
   1. 「确认方案」按钮原地切换为三步进度（SSOT §16.3 线框）：「保存你确认的方案」对应 `CLAIM_AND_QUIESCE`～`FREEZE_SNAPSHOT`；「准备隔离的施工区」对应 `SIGN_AND_PREPARE` 的建合同与批准；「安排施工步骤」对应建任务图。`runConfirmSchemeAtomic` 增加可选 `onStage(stage)` 回调驱动进度。
   2. 交接期间右栏输入框禁用，占位文案「正在交接，几秒后可以继续聊」。
-  3. `COMMIT` 成功 → 右栏**解锁**；插入系统消息「开工了。一共 N 步…你可以离开，做完或需要你的时候我会提醒你。」（N = 任务图节点数；时长估算取 `ScopePlan.budget.plain`）。
-  4. **过渡态语义（第二批分流上线前）**：冻结后用户在右栏发送的消息只交给只读搭档作问答（SSOT §16.5 A 类），**不得**调用 `rebuildSchemeFromCorpus`、不得改合同 / 任务图 / Worker 指引；右栏输入框上方显示一行提示「方案已确认。想改需求的话先告诉我，下一版会支持一键记到下一轮。」
+  3. [ADR-0014 / DEC-005 条款级重写] `COMMIT` 成功 → 右栏**解锁**；中栏画布展示卡片「开工了。一共 N 步…你可以离开，做完或需要你的时候我会提醒你。」（N = 任务图节点数；时长估算取 `ScopePlan.budget.plain`）。严禁向右栏注入任何系统消息。
+  4. [ADR-0014 条款级重写] 右栏保持纯净自由对话输入，中栏画布展示过渡态提示；严禁在右栏输入框上方硬编码注入提示。
   5. 失败分支：回到方案态并解锁（沿用既有 `restoreRightChat`）；仅 `E_COMPENSATION_FAILED` 保持锁定并显示「这次准备没清理干净，需要你手动处理」与诊断入口。
 * **非目标**：不做四类分流卡片（第二批）；不做施工幕 UI（第二批）。
 * **验收（PASS）**：新增 `tests/ui/journey-handoff.test.tsx`（对应 SSOT `J-02`）：
   - 点击后依次出现三步进度，交接期间输入框 `disabled`。
-  - 成功后输入框可用，系统消息含节点数。
+  - 成功后输入框可用；画布卡片含节点数，右栏消息列表新增系统消息数为 0。
   - 冻结后发送一条消息：搭档发送函数被调用 1 次，`rebuildSchemeFromCorpus` 调用 0 次，方案 `scheme_revision` 不变。
   - `E_SIGN_AND_PREPARE_FAILED`（补偿成功）→ 解锁；`E_COMPENSATION_FAILED` → 保持锁定并显示诊断入口。
   - `tests/ui/supervisor-studio-approval.test.tsx`、`task-c22` 不回归。
@@ -2976,7 +2976,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
   2. `daemon/supervisor/intent-compiler/system-prompt.ts`：实施口径 §6.2 骨架 + §6.5 八条 few-shot；`COMPILER_PROMPT_VERSION`。
   3. `daemon/supervisor/intent-compiler/render-input.ts`：实施口径 §6.3（nonce 标签、N1～N3 预规范化、AI 回复无别名、墓碑只注入是什么与为什么）。
   4. `daemon/supervisor/intent-compiler/compile-loop.ts`：实施口径 §7（防抖、单在途、只重试 STALE 一次、CAS 落盘、三次失败提示、预算账本、离线兜底）。
-  5. `daemon/supervisor/intent-compiler/partner-hint-filter.ts`：零模型过滤内部词。
+  5. [ADR-0014 / DEC-004 已废止] 物理删除 `partner-hint-filter.ts` 及生成 Schema 中的 `partner_hint` 字段；编译器输出严禁回流到右栏，保持右栏无系统提示与暗中注入。
   6. `demoReady` 改判（§14.10）。
 * **非目标**：不改引擎；不做金标评测脚本（J.11）；不把搭档与编译器合并成一次调用（实施口径 §5.1 已否决）。
 * **依赖与风险**：GAP-1（聊天否决不入墓）、GAP-2（墓碑命中不看 `revival_keys`）已由 J.9a 增补关闭，见 `supervisor.md` §14.11 K-10、K-11。
@@ -2988,7 +2988,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
   - `tests/eval/intent-compiler-adversarial.test.ts`：以对抗补丁回放 ADV-01～29 喂引擎，断言 `expected_engine`（确定性，可进 CI）。
   - `tests/ui/intent-compiler-offline.test.tsx`（`V-06`）。
 * **FAIL**：生成 Schema 允许 `occurrence`、`anchor`、`user_confirmed`、`edit` 证据任一出现；模型输出 `base_revision` 或 `compiled_from_turns` 并被采信；op 级丢弃触发重试；提示词出现引擎词表或阈值。
-* **关键文件**：见范围 1～5
+* **关键文件**：见范围 1～4（范围 5 已废止）
 * **估算**：M
 
 #### 【Task J.18】Worker 派工墓地门禁（INV-LEDGER-03 工地侧） `[NEW_TASK]`

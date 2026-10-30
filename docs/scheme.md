@@ -45,8 +45,10 @@
 | q19 | U3 | 让"一个人 + AI"的开发团队，在复杂度超过个人脑容量之后，仍然能够掌握整个系统 |
 | q20 | U3 | 让一个人也能驾驭 AI 构建的复杂软件。 |
 | q21 | U3 | Agent 现在是否能直接照任务无脑开发？ |
+| q22 | U4 | 直接对这两个 PR 执行变更，认同三篇 ADR 和两个推荐项 |
 
 > `U3` = 2026-10-30 用户提出的目标能力与审计要求（任务 TINA16-3 第三轮）。审计结论见 [`reports/delivery-path-audit.md`](./reports/delivery-path-audit.md)。
+> `U4` = 2026-10-30 用户对三篇 ADR（ADR-0015～0017）及两项推荐（SA-1 与凭据钥匙串 OQ-REL-1）的正式授权拍板（原话见 q22）。
 
 **已落盘的用户裁决**（不是本轮原话，但属于 `user_confirmed`，可作证据）：
 
@@ -134,10 +136,11 @@
 | dec-1 | 「Supervisor 生成的机器指令」具体是什么？ | 签署后的**合同 + 任务图节点**：Supervisor 起草，用户在画布确认，Daemon 派发给 Worker。 | Supervisor 直接给 Worker 发自由文本 prompt | 后者让「提建议的人」同时指挥执行，ADR-0007 分权失效。前者与 q7「直接执行」不冲突：用户确认后无需再介入。 | low | `user_confirmed` | q7、q13；ADR-0007 |
 | dec-2 | 用户的「主观偏好」放在方案哪里？ | 作为 `goals` / `acceptance` 中 `check: playtest` 的条目，由用户试玩判定。 | 单独建偏好字段 | 偏好只能由人判，正好对应试玩验收；不必扩 Schema。 | low | `user_confirmed` | q1、q13 |
 | dec-3 | 三 Agent 拓扑要不要写成 ADR？ | 本方案确认后写 ADR-0014「三 Agent 拓扑与意图编译组件化：中栏形态开放 / 右栏无系统提示脑暴 / Worktree Worker 隔离施工」。 | 只留在本文 | ADR 才能单独 supersede ADR-0007 中「需求 AI 与 Supervisor 允许共用会话」一句。 | high | `user_confirmed` | q4～q7、q12；ADR-0014 |
-| dec-5 | 大需求怎么拆？ | 项目 → 里程碑 → 合同 → 任务节点四级；合同是最小可验收交付单元，一轮一份，串行执行。 | 一份大合同并行多 Worker（RFC v0.2 §5） | 单工作区互斥（ADR-0002）仍成立；合同小才能逐份验收与回滚。 | high | `accepted`（ADR-0015，随 PR 合入生效；PR 中可否决） | q18；[ADR-0015](./adr/0015-contract-as-unit-of-delivery.md) |
-| dec-6 | 技术决策记在哪里，用户才能在复杂度上升后仍掌握系统？ | 目标项目仓库内的 `docs/system/`：模块地图 + 决策记录 + 接口 + 变更日志，随每份合同更新，Daemon 校验覆盖。 | 记在 `.stagent/`（本地、不入库） | `.stagent/` 被 `.git/info/exclude` 排除，换机即丢，且不随代码评审。 | high | `accepted`（ADR-0016，随 PR 合入生效；PR 中可否决） | q19；[ADR-0016](./adr/0016-system-knowledge-base-in-repo.md) |
-| dec-7 | 部署放在合同状态机里，还是单独一条生命周期？ | 单独的 Release 生命周期，引用已合并的提交；`MERGED` 仍是合同唯一终态。 | 在合同状态机 `MERGED` 之后加 `DEPLOYED` | 不破坏 ADR-0012；一次发布可包含多份合同，失败回滚不应解开已合并的合同。 | high | `accepted`（ADR-0017，随 PR 合入生效；PR 中可否决） | q17；[ADR-0017](./adr/0017-release-lifecycle-after-merge.md) |
-| dec-8 | ADR-0014「只保留两次点击」下，涉及保护清单的改动怎么授权？（SA-1） | 敏感项默认排除出范围；方案确需触及时，「确认开工」按钮上写明「含 N 处敏感改动」，这一次点击同时记录这些授权。 | 保留逐项「可以/不行」 | 守住两次点击，也不放宽保护清单：授权仍逐项落进合同 `approval`。 | high | `pending` | q13；[`specs/delivery-lifecycle.md`](./specs/delivery-lifecycle.md) §5 |
+| dec-5 | 大需求怎么拆？ | 项目 → 里程碑 → 合同 → 任务节点四级；合同是最小可验收交付单元，一轮一份，串行执行。 | 一份大合同并行多 Worker（RFC v0.2 §5） | 单工作区互斥（ADR-0002）仍成立；合同小才能逐份验收与回滚。 | high | `user_confirmed` | q18、q22；[ADR-0015](./adr/0015-contract-as-unit-of-delivery.md) |
+| dec-6 | 技术决策记在哪里，用户才能在复杂度上升后仍掌握系统？ | 目标项目仓库内的 `docs/system/`：模块地图 + 决策记录 + 接口 + 变更日志，随每份合同更新，Daemon 校验覆盖。 | 记在 `.stagent/`（本地、不入库） | `.stagent/` 被 `.git/info/exclude` 排除，换机即丢，且不随代码评审。 | high | `user_confirmed` | q19、q22；[ADR-0016](./adr/0016-system-knowledge-base-in-repo.md) |
+| dec-7 | 部署放在合同状态机里，还是单独一条生命周期？ | 单独的 Release 生命周期，引用已合并的提交；`MERGED` 仍是合同唯一终态。 | 在合同状态机 `MERGED` 之后加 `DEPLOYED` | 不破坏 ADR-0012；一次发布可包含多份合同，失败回滚不应解开已合并的合同。 | high | `user_confirmed` | q17、q22；[ADR-0017](./adr/0017-release-lifecycle-after-merge.md) |
+| dec-8 | ADR-0014「只保留两次点击」下，涉及保护清单的改动怎么授权？（SA-1） | 敏感项默认排除出范围；只有用户原话点名时才进审批，开工按钮一次点击一并授权并带入 plan_digest。 | 保留逐项「可以/不行」 | 守住两次点击，也不放宽保护清单：物理门禁绝不放行未获授权的敏感写入。 | high | `user_confirmed` | q13、q22；[`specs/delivery-lifecycle.md`](./specs/delivery-lifecycle.md) §5 |
+| dec-9 | 凭据保险库（Vault）选择哪种存储后端？（OQ-REL-1） | 系统钥匙串（OS Keychain）：本地开发最安全、防明文泄露能力最强，Worker 运行时只受控注入环境变量。 | 加密 JSON 文件；第三方托管服务 | 系统钥匙串避免明文或对称秘钥落盘在目标仓库或 .stagent/，符合零凭据落盘原则。 | low | `user_confirmed` | q14、q22；[`specs/release-and-operations.md`](./specs/release-and-operations.md) §4.1 |
 | dec-4 | `development-tasks.md`（约 460KB）要不要拆？ | 拆成「卡号索引 + 活跃卡 + 已完成卡 + 修订流水」，卡号不变。 | 维持单文件 | 约 65% 是已完成卡的历史，仍要执行的 J 系列只占约 15%；但拆分会与正在进行的 PR 冲突，需择时。 | low | `pending` | q9；[`ledger/README.md`](./ledger/README.md) DOC-1 |
 
 ## 7. 分歧（`conflicts[]`）——原话与现行规格打架的地方

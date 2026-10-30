@@ -128,7 +128,7 @@ export interface ReleaseContext {
 | V-4 仓库只放声明 | 仓库保留 `.env.example`（变量名 + 说明）。Daemon 在发布前比对：目标 `env_keys` 中有未在保险库设值的 → 发布前置失败，白话列出缺哪几个 |
 | V-5 用户输入 | 画布「设置」→「密钥」中输入，掩码显示；不得通过右栏聊天输入。用户在右栏贴出疑似密钥时，右栏不拦截（它是自由对话），但 Supervisor 编译时不得把它写进方案，并在画布提示「请到密钥设置里保存，不要发在聊天里」 |
 
-**OQ-REL-1（L.14 开工前定）**：存储后端二选一：
+**OQ-REL-1 决议（2026-10-30 用户原话 q22 拍板确认）**：选定 **A. 系统钥匙串（OS Keychain）**（macOS Keychain / Windows Credential Manager / Linux Secret Service，无桌面环境时回退本地加密文件）。
 
 - **A. 系统钥匙串**：macOS Keychain / Windows Credential Manager / Linux Secret Service；
 - **B. 本地加密文件**：`.stagent/vault.enc`，密钥派生自用户口令。

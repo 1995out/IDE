@@ -50,3 +50,19 @@
 | **DEC-003** | `conf-6` | 允许 Worker 受控只读外网通道，但必须强绑定凭据保险库（Vault）一并实施，账密严禁进入对话上下文 | 登记为 Vault 前置依赖；关闭 conf-6；闭环 goal-2 / oq-3 |
 | **DEC-004** | `conf-2, 4` | 右栏剥离写死的架构师人设与 `partner_hint` / `buildProtectionPromptNotice` 前缀，恢复纯粹自由对话 | 关闭 conf-2、conf-4；更新 Claude/Baseline Adapter |
 | **DEC-005** | `conf-3, 7` | 中栏仅经画布交互；右栏维持精确只读白名单防穿透 | 关闭 conf-3、conf-7 |
+| **DEC-006** | `goal-8 / dec-5` | ADR-0015 大需求四级分解（项目 → 里程碑 → 合同 → 任务节点），合同为最小可验收交付单元 | 立项并合入 [`../adr/0015-contract-as-unit-of-delivery.md`](../adr/0015-contract-as-unit-of-delivery.md)；用户 q22 拍板 |
+| **DEC-007** | `goal-9 / dec-6` | ADR-0016 目标项目系统知识库随代码入库，每份合同强制同步维护，静态防漂移 | 立项并合入 [`../adr/0016-system-knowledge-base-in-repo.md`](../adr/0016-system-knowledge-base-in-repo.md)；用户 q22 拍板 |
+| **DEC-008** | `goal-7 / dec-7` | ADR-0017 发布（Release）为独立生命周期，合同终态仍为 MERGED，支持探活失败自动回滚 | 立项并合入 [`../adr/0017-release-lifecycle-after-merge.md`](../adr/0017-release-lifecycle-after-merge.md)；用户 q22 拍板 |
+| **DEC-009** | `dec-8, 9 / SA-1` | 敏感改动仅在用户原话点名时进入审批并在开工时一并授权；凭据保险库选定系统钥匙串（OS Keychain） | 写入 [`../specs/delivery-lifecycle.md`](../specs/delivery-lifecycle.md) §5 与 [`../specs/release-and-operations.md`](../specs/release-and-operations.md) §4；用户 q22 拍板 |
+
+## 交付全链路挂账（2026-10-30 新增）
+
+| 编号 | 问题 | 阻断级别 | 决策人 | 落点 |
+| :--- | :--- | :--- | :--- | :--- |
+| OQ-REL-1 | 凭据保险库存储后端已选定系统钥匙串（OS Keychain，dec-9） | **RESOLVED** | 用户（q22） | [`../specs/release-and-operations.md`](../specs/release-and-operations.md) §4 |
+| SA-1 | ADR-0014 敏感项授权已选定开工一并授权机制（dec-8） | **RESOLVED** | 用户（q22） | [`../specs/delivery-lifecycle.md`](../specs/delivery-lifecycle.md) §5 |
+| DLV-1 | ADR-0015～0017 均已由用户原话 q22 明确授权生效（DEC-006～008） | **RESOLVED** | 用户（q22） | [`../scheme.md`](../scheme.md) §6 |
+| DLV-2 | PR #3 已由用户批准并执行物理关闭 | **RESOLVED** | 用户 | PR #3 已关闭 |
+| DLV-3 | `AdapterRegistry` 未接线，Worker 只有 OpenAI `AiWorker`；Claude Code 作 Worker（W.5a 的 worker 角色）未接入派工 | NON_BLOCKER（M2 不依赖） | 卡 owner | 审计 §2 S5；需另立卡 |
+| DLV-4 | `.stagent/metadata/` 仍在代码写入路径列表中，与 ADR-0011 废止该路径冲突 | NON_BLOCKER | 卡 owner | 审计依据：代码 `.stagent/` 写入清单 |
+| DLV-5 | 系统地图 UI（项目视图第二页）与「改这里会影响什么」入口尚未立卡 | NON_BLOCKER | — | [`../specs/technical-design-and-knowledge.md`](../specs/technical-design-and-knowledge.md) §5 |

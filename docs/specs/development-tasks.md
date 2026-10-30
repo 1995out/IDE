@@ -1,6 +1,6 @@
 > **读法（2026-10-29 文档治理加注，不改任何卡的条款与状态）**
 > - **本文件是 L3 任务卡层**：Supervisor 方案确认后交给施工 Worker 的机器指令。意图层见 [`../scheme.md`](../scheme.md)，地图见 [`../README.md`](../README.md)。
-> - **当前要做的卡在 §3.4c（J 系列）**。§1.1 矩阵是状态总表；下方游离的 P-xx 修订行、版本头 84 条状态回写与 §6 修订记录都是历史流水，施工时可跳过。
+> - **当前要做的卡在 §3.4c（J 系列，注意各卡「ADR-0014 修订」块）与 §3.4d（L 系列）**，按 [`delivery-lifecycle.md`](./delivery-lifecycle.md) §8 里程碑 M2 → M5 排期；每张卡开工前按 [`task-card-standard.md`](./task-card-standard.md) 核对就绪。§1.1 矩阵是状态总表；下方游离的 P-xx 修订行、版本头 84 条状态回写与 §6 修订记录都是历史流水，施工时可跳过。
 > - **三 Agent 口径以 J 系列与 [`supervisor.md`](./supervisor.md) §13.2 为准**：右栏 = 只读 AI 搭档（`TASK-J.1`），中栏 = Supervisor 方案画布，Worker 只在 Worktree 施工。C.1「右栏（Coding Agent 对话）」、W.1「推入右侧 Worker 对话窗口」、W.5a「对接右栏会话」、C.6、P.1 / E.1 的 Vibe 直改主工作树、Sprint 1 门禁「右栏 Claude Code 改文件」均为早期叙述，已由 J.1 / C.18 改变；原文保留作溯源。
 > - **已知结构问题**（状态矛盾、三处「当前基线」不一致、失效的 `docs/archive/*` 引用）登记在 [`../ledger/README.md`](../ledger/README.md) DOC-1～DOC-4，未在本轮修改。
 
@@ -226,6 +226,23 @@
 | **TASK-J.9** | SchemePatch 零模型确定性合并引擎 | 意图编译器 / 证据台账 | **[NEW_TASK]** | P1 闭环 v2.1 第二批 | • SSOT §14.2 / §14.3 / §14.11；V-01～V-04、V-10～V-13<br>• 实施口径 [`scheme-patch-engine.md`](./scheme-patch-engine.md)<br>• 纯函数零模型；可用桩编译器 |
 | **TASK-J.10** | 意图编译器生成端与 Daemon 编译循环 | 意图编译器 | **[NEW_TASK]** | P1 闭环 v2.1 第二批 | • 前置 `J.9`；合并后触发预检依赖 `J.2`<br>• 实施口径 [`intent-compiler-prompt.md`](./intent-compiler-prompt.md)<br>• V-05、V-06、V-09；GAP-1/GAP-2 已关闭，见 `supervisor.md` §14.11 K-10/K-11 |
 | **TASK-J.18** | Worker 派工墓地门禁（INV-LEDGER-03 工地侧） | 门禁 / 证据台账 | **[NEW_TASK]** | P1 闭环 v2.1 第二批 | • 前置 `J.4`（硬）、`J.9`<br>• 实施口径 [`worker-graveyard-gate.md`](./worker-graveyard-gate.md)；SSOT §14.11 第 5 小节 G-MATCH<br>• 端口段 3950–3959 |
+| **TASK-L.1** | 右栏纯净化（DEC-004） | 右栏 / Agent | **[NEW_TASK]** | 交付全链路 M2 | • 前置 无<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.2** | Worker 指令补全「你会被这样检查」 | Worker | **[NEW_TASK]** | 交付全链路 M2 | • 前置 无<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.3** | 测试义务：合同元数据、`ScopePlan` 系统范围、`stagent check` | 验证 | **[NEW_TASK]** | 交付全链路 M2 | • 前置 `J.2`、`J.4`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.4** | 两段式施工编排：先红后绿 | 验证 / 编排 | **[NEW_TASK]** | 交付全链路 M2 | • 前置 `L.3`、`L.2`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.5** | 真实预览：Worktree 启动用户应用 | 试玩 | **[NEW_TASK]** | 交付全链路 M2 | • 前置 无<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.6** | 黄金切片端到端测试（M2 退出） | E2E | **[NEW_TASK]** | 交付全链路 M2 | • 前置 `L.1`～`L.5`、`J.2`～`J.10`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.7** | `ProjectPlan` 类型、校验与存储 | 项目分解 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.6`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.8** | 计划补丁合并与分解器 | 项目分解 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.7`、`J.9`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.9** | 合同序列与「下一份」交接 | 项目分解 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.8`、`J.4`、`J.5`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.10** | 画布「项目地图」 | 工作台 UX | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.9`、`L.8`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.11** | DesignNote 生成、校验与注入 | 技术方案 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.4`、`L.9`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.12** | 系统知识库与漂移门禁 | 知识库 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.11`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.13** | 追踪链与「这段为什么存在」 | 追踪 | **[NEW_TASK]** | 交付全链路 M3 | • 前置 `L.9`、`L.12`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.14** | 凭据保险库 | 安全 | **[NEW_TASK]** | 交付全链路 M4 | • 前置 `L.6`；OQ-REL-1<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.15** | 发布生命周期与两类目标 | 发布 | **[NEW_TASK]** | 交付全链路 M4 | • 前置 `L.14`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.16** | 线上问题回流 | 运维 | **[NEW_TASK]** | 交付全链路 M4 | • 前置 `L.15`、`L.9`<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
+| **TASK-L.17** | 受控只读外网摄取 | 北极星 | **[NEW_TASK]** | 交付全链路 M5 | • 前置 `L.14`；oq-2（未就绪）<br>• 详见 §3.4d；总装图 [`delivery-lifecycle.md`](./delivery-lifecycle.md) |
 | **TASK-H.1** | Worker JSON/Patch 解析校验与轻量重试 | v0.1 硬化 | **[COMPLETED]** | Hardening | • 前置 `W.5a` COMPLETED<br>• 格式校验拦截 + ≤1 次本地重试；异常平稳退回非挂起<br>• 纪要 §4#2；禁扩容器/W.5b/c |
 | **TASK-H.2** | MERGED/DELIVERED 终态收口消歧 | v0.1 硬化 | **[COMPLETED]** | Hardening | • 前置 `C.15a`+`C.15c` COMPLETED<br>• 统一枚举或正式注记 MERGED=终态；消除规范/代码两层皮<br>• 纪要 §4#1；禁云归档 |
 | **TASK-H.3** | 基线扫描硬上限与超时熔断 | v0.1 硬化 | **[COMPLETED]** | Hardening | • 前置 `C.14a` COMPLETED<br>• 文件数/深度硬上限 + 超时中断；防 Daemon 假死<br>• 沿用 OS 只读证明；禁 AST/Impact |
@@ -478,7 +495,40 @@ TASK-0.1 ──► TASK-0.2b ──► TASK-0.2c (Schema v1.3.0 & 自愈边) ─
   { "from": "TASK-J.4", "to": "TASK-J.5" },
   { "from": "TASK-J.5", "to": "TASK-J.6" },
   { "from": "TASK-J.5", "to": "TASK-J.7" },
-  { "from": "TASK-J.1", "to": "TASK-J.7" }
+  { "from": "TASK-J.1", "to": "TASK-J.7" },
+  { "from": "TASK-L.3", "to": "TASK-L.4" },
+  { "from": "TASK-L.1", "to": "TASK-L.6" },
+  { "from": "TASK-L.2", "to": "TASK-L.6" },
+  { "from": "TASK-L.4", "to": "TASK-L.6" },
+  { "from": "TASK-L.5", "to": "TASK-L.6" },
+  { "from": "TASK-J.5", "to": "TASK-L.6" },
+  { "from": "TASK-J.7", "to": "TASK-L.6" },
+  { "from": "TASK-J.8", "to": "TASK-L.6" },
+  { "from": "TASK-J.10", "to": "TASK-L.6" },
+  { "from": "TASK-J.9", "to": "TASK-J.10" },
+  { "from": "TASK-L.6", "to": "TASK-L.7" },
+  { "from": "TASK-L.7", "to": "TASK-L.8" },
+  { "from": "TASK-J.9", "to": "TASK-L.8" },
+  { "from": "TASK-L.8", "to": "TASK-L.9" },
+  { "from": "TASK-J.4", "to": "TASK-L.9" },
+  { "from": "TASK-J.5", "to": "TASK-L.9" },
+  { "from": "TASK-L.9", "to": "TASK-L.10" },
+  { "from": "TASK-L.4", "to": "TASK-L.11" },
+  { "from": "TASK-L.11", "to": "TASK-L.12" },
+  { "from": "TASK-L.9", "to": "TASK-L.13" },
+  { "from": "TASK-L.6", "to": "TASK-L.14" },
+  { "from": "TASK-L.14", "to": "TASK-L.15" },
+  { "from": "TASK-L.15", "to": "TASK-L.16" },
+  { "from": "TASK-L.9", "to": "TASK-L.16" },
+  { "from": "TASK-L.14", "to": "TASK-L.17" },
+  { "from": "TASK-J.4", "to": "TASK-J.18" },
+  { "from": "TASK-J.9", "to": "TASK-J.18" },
+  { "from": "TASK-J.2", "to": "TASK-L.3" },
+  { "from": "TASK-J.4", "to": "TASK-L.3" },
+  { "from": "TASK-L.2", "to": "TASK-L.4" },
+  { "from": "TASK-L.8", "to": "TASK-L.10" },
+  { "from": "TASK-L.9", "to": "TASK-L.11" },
+  { "from": "TASK-L.12", "to": "TASK-L.13" }
 ]
 ```
 
@@ -2691,6 +2741,8 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 #### 【Task J.2】`ScopePlan` 纯函数与 Daemon 范围预检构建器 `[NEW_TASK]`
 
+> **交付全链路备注（2026-10-30）**：本卡不变。后续 `TASK-L.3`、`L.9`、`L.12` 会在 `scope-plan-builder.ts` 中追加签署前的系统范围（`withSystemScope`：`tests/stagent/**`、`docs/system/**`、`stagent check` 命令、按桩种类的安装权限）。实现本卡时请把「组合各来源 → 计算 digest」写成可追加来源的形式。
+
 * **任务编号**：`TASK-J.2`
 * **任务名称**：范围预检单一事实源（类型 + 纯函数 + 构建器）
 * **对应规格**：SSOT 第三部分 §15.3、§15.4（数据部分）；§18 `S2-02`、`S2-04`；§19 `L-03`（前半）
@@ -2719,6 +2771,8 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 #### 【Task J.3】唯一确认谓词纳入 `ScopePlan` `[NEW_TASK]`
 
+> **ADR-0014 修订（2026-10-30，[`delivery-lifecycle.md`](./delivery-lifecycle.md) §5 SA-1，推荐默认，待用户确认）**：`E_SCOPE_APPROVAL_REQUIRED` 保留，但「表态」不再是逐项点击。`needs_approval` 只收用户原话点名的敏感项与系统必需的敏感项（如锁文件），其余默认移入 `never_touch`。授权仍存在 `ScopePlan.needs_approval[].approved` 中：前端在「确认开工」时用 `applyScopeDecisions` 一次性把全部项置为 `true`，带着新 `plan_digest` 提交。T-GATE 用例中「有未表态敏感项」改为「提交的 `ScopePlan` 中仍有 `approved !== true` 的敏感项」。其余判定顺序不变。
+
 * **任务编号**：`TASK-J.3`
 * **任务名称**：`evaluateSchemeConfirmation(draft, demo, scopePlan)` 与三个范围拒绝码
 * **对应规格**：SSOT 第三部分 §15.5、§17 D7；§7 D1 拒绝码表（v2.1 三行）；`runtime-contract-and-safety.md` §2.3；§18 `S2-01`、`S2-03`（及 `S2-02` 谓词侧）；§19 `L-04`
@@ -2727,13 +2781,13 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **状态**：`[NEW_TASK]`
 * **一句话目标**：「能不能点确认方案」的唯一谓词把范围也算进去，前端在确认**之前**就能把所有范围问题用白话说清。
 * **范围**：
-  1. `src/lib/journey/scheme-draft.ts::evaluateSchemeConfirmation` 增加第三参数 `scopePlan: ScopePlan | null`。判定顺序（先命中先返回）：既有 `E_SCHEME_ALREADY_FROZEN` → `E_SCHEME_CONFLICTS_OPEN` → `E_SCHEME_NOT_REVIEWABLE` → Demo 四码 → **`E_SCOPE_NOT_READY`**（`scopePlan == null` 或 `scopePlan.scheme_revision !== draft.scheme_revision`）→ **`E_SCOPE_POLICY`**（`!scopePlan.grade.ok`）→ **`E_SCOPE_APPROVAL_REQUIRED`**（存在 `needs_approval[i].approved === null`）。
+  1. `src/lib/journey/scheme-draft.ts::evaluateSchemeConfirmation` 增加第三参数 `scopePlan: ScopePlan | null`。判定顺序（先命中先返回）：既有 `E_SCHEME_ALREADY_FROZEN` → `E_SCHEME_CONFLICTS_OPEN` → `E_SCHEME_NOT_REVIEWABLE` → Demo 四码 → **`E_SCOPE_NOT_READY`**（`scopePlan == null` 或 `scopePlan.scheme_revision !== draft.scheme_revision`）→ **`E_SCOPE_POLICY`**（`!scopePlan.grade.ok`）→ **`E_SCOPE_APPROVAL_REQUIRED`**（提交的 `ScopePlan` 中存在 `needs_approval[i].approved !== true` 的敏感项；依 ADR-0014 / SA-1，不再支持逐项表态，开工时一并授权）。
   2. 三个码的白话文案按 SSOT §15.5 表格原文；`E_SCOPE_POLICY` 文案须带出被拒的白话区域名（来自 `grade.rejected` 与 `areas`），**不**直接打印 glob。
   3. `canConfirmScheme` 兼容别名改为传 `null` 并在 JSDoc 标注「新代码禁止使用」——其结果将恒为 `E_SCOPE_NOT_READY`，从而迫使遗留调用点暴露出来；`grep` 全仓调用点并列入 PR 描述。
   4. `src/routes/index.tsx` 的 `schemeConfirmation` `useMemo` 暂传 `null`（真正接线在 J.5）。**本卡合入后「确认方案」按钮会显示「正在核对要改哪些地方…」而不可点**——为避免主干出现不可用窗口，本卡与 `TASK-J.5` **必须同一 PR 合入或 J.5 紧随其后**；若需单独合入，用临时开关 `SCOPE_GATE_ENABLED`（默认关）包住第 1 步新增的三条判定，J.5 合入时移除开关。
 * **非目标**：不改 Daemon（J.4）；不做 UI 区块（J.6）。
 * **验收（PASS）**：
-  - `tests/unit/scheme-confirmation-gate.test.ts` 新增 `T-GATE-012`～`T-GATE-016`：修订号不一致 → `E_SCOPE_NOT_READY`；`null` → `E_SCOPE_NOT_READY`；`grade.ok=false` → `E_SCOPE_POLICY` 且文案含白话区域名、不含 `**`；有未表态敏感项 → `E_SCOPE_APPROVAL_REQUIRED`；全部满足 → `ok`。
+  - `tests/unit/scheme-confirmation-gate.test.ts` 新增 `T-GATE-012`～`T-GATE-016`：修订号不一致 → `E_SCOPE_NOT_READY`；`null` → `E_SCOPE_NOT_READY`；`grade.ok=false` → `E_SCOPE_POLICY` 且文案含白话区域名、不含 `**`；存在未授权敏感项（`approved !== true`） → `E_SCOPE_APPROVAL_REQUIRED`；全部满足 → `ok`。
   - 判定顺序用例：有 OPEN 冲突且范围未就绪时返回 `E_SCHEME_CONFLICTS_OPEN`（冲突优先）。
   - 既有 `T-GATE-001`～`011` 在传入合规 `scopePlan` 夹具后全部不回归。
 * **FAIL**：存在第二套范围判断（UI 自行推导 `disabled`）；或谓词读取 `completeness`。
@@ -2769,6 +2823,8 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 #### 【Task J.5】「确认方案」接线改造：范围先算好、按快照签 `[NEW_TASK]`
 
+> **ADR-0014 修订（2026-10-30）**：按 SA-1，确认请求提交的是已用 `applyScopeDecisions` 置好授权的 `ScopePlan`（见 J.3 修订），Daemon 用快照 + 同一组表态重算，摘要一致；不再有逐项表态往返。防抖预检保留（范围仍须在点击前算好，只是不强迫用户审阅）。
+
 * **任务编号**：`TASK-J.5`
 * **任务名称**：前端确认链改用 `ScopePlan`，删除事务前的临时合同推断
 * **对应规格**：SSOT 第三部分 §15.5、§16.3（失败分支）；§19 `L-03`、`L-04`
@@ -2778,7 +2834,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **对照痛点（代码事实）**：`src/routes/index.tsx::handleConfirmScheme` 在事务开始前用 `formatSchemeAsIntent` → `submitJourneyMessage` 生成合同骨架，再在 `signAndPrepare` 里 `createContractWithAdmission`——范围从未展示给用户，且失败发生在右栏已锁之后。
 * **一句话目标**：方案每变一次就预检一次；确认时只冻结、只按快照建合同；任何范围问题都在点击前暴露。
 * **范围**：
-  1. `Console()` 新增 `scopePlan` 状态：`schemeDraft.scheme_revision` 或用户范围表态变化后 300ms 防抖调用 `preflightScope()`；在途请求被新修订作废；结果修订号不匹配时丢弃。
+  1. `Console()` 新增 `scopePlan` 状态：`schemeDraft.scheme_revision` 变化后 300ms 防抖调用 `preflightScope()`（依 ADR-0014 审阅后置，无开工前逐项表态交互）；在途请求被新修订作废；结果修订号不匹配时丢弃。
   2. `schemeConfirmation` `useMemo` 传入 `scopePlan`（替换 J.3 的 `null`，移除 `SCOPE_GATE_ENABLED` 开关）。
   3. 删除事务前的 `formatSchemeAsIntent` → `submitJourneyMessage` 合同推断块。`persistSnapshot` 发送 `scope_plan`；`signAndPrepare` 用 `scopePlanToContractScope(scopePlan)` 与方案标题 / 摘要组装合同后调用 `createContractWithAdmission(..., { confirmationId })`。
   4. `src/lib/journey/confirm-scheme-atomic.ts`：`persistSnapshot` 抛出 `409 E_SCOPE_PLAN_DRIFT` 时，事务结果码为 `E_SCOPE_PLAN_DRIFT`，执行 `restoreRightChat`（右栏解锁），**不进入** `SIGN_AND_PREPARE`；调用方用响应附带的新 plan 刷新 `scopePlan` 并显示 SSOT §16.3 白话「项目刚刚有变化，我重新核对了改动范围，请再看一眼」。
@@ -2794,32 +2850,36 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 #### 【Task J.6】中栏《改动范围与验收方式》区块 `[NEW_TASK]`
 
+> **ADR-0014 修订（2026-10-30，审阅后置）**：开工前**不展示**路径与区域调整控件。区块在开工前只显示三行白话：「这次大概改 N 处、不碰 M 处」「怎么算做完」「预计多大」；如有敏感项，再显示「含 N 处敏感改动」与「不碰这些，其余照做」按钮。范围 `2` 中「会改动的地方 / 这次不会碰」的完整清单，后置到试玩验收幕**只读**展示，与证据并列。范围 `3` 的「不要改这里」按钮删除：签署后范围已冻结，用户对范围的异议走 supervisor §16.7「这里不对」，或在右栏说出来，按 §16.5 C 类进入下一份合同。验收用例同步调整：开工前页面不含区域级按钮；验收幕清单只读。
+
 * **任务编号**：`TASK-J.6`
 * **任务名称**：`ScopeAcceptanceBlock` 白话呈现与用户表态
 * **对应规格**：SSOT 第三部分 §15.2、§15.4；§18 `S2-08`
 * **前置依赖**：`TASK-J.5`
 * **优先级**：P1
 * **状态**：`[NEW_TASK]`
-* **一句话目标**：用户在点「确认方案」之前，用白话看清并能调整这一轮改哪里、不碰哪里、哪些敏感处要点头、怎么算做完、多大规模。
+* **一句话目标**：用户在点「确认开工」之前，用三行白话看清改动概览（大概改 N 处、不碰 M 处、怎么算做完、预计规模）；如有敏感项，显示白话敏感项与「不碰这些」按钮；具体路径树与命令明细后置到试玩验收幕只读展示。
 * **范围**：
   1. 新建 `src/components/studio/ScopeAcceptanceBlock.tsx`，插入 `SchemeReviewPane` 的决议区之后、「生成 Demo」之前（SSOT §15.2 顺序）。
-  2. 五块内容按 SSOT §15.4 线框：**会改动的地方**（`areas`：白话名 + 理由 + 「不要改这里」按钮；路径收在「展开看具体文件」折叠里）、**这次不会碰**（`never_touch` 白话分组）、**需要你点头**（`needs_approval` 每项「可以 / 不行」）、**怎么算做完**（本批取 `L0DraftPlan.acceptance_criteria` 映射为「你试玩时看」条目 + `verification.plain` 映射为「系统自动检查」条目；`manual_only` 时显示「这个项目没有自动检查…」）、**预计规模**（`budget.plain`）。
-  3. 「不要改这里」/「可以」/「不行」调用 `applyScopeDecisions` 的入参并触发 J.5 的预检；表态被视为用户编辑（参与方案 pin 语义，不被自动整理覆盖）。
-  4. `E_SCOPE_POLICY` 时，区块顶部显示谓词返回的白话说明；`E_SCOPE_APPROVAL_REQUIRED` 时，点「确认方案」自动滚动并高亮第一个未表态项。
+  2. [ADR-0014 / SA-1 条款级重写] 开工前仅展示三行白话概览：1) 改动概览（大概改 N 处、不碰 M 处；不展示路径树与区域按钮）；2) 验收方式（怎么算做完）；3) 预计规模（预计多大）。如有用户点名的敏感项，展示「含 N 处敏感改动：<白话名>」与「不碰这些，其余照做」按钮。原设计的完整清单与路径树后置到验收幕只读展示。原设计的「每项『可以/不行』」物理废止删除。
+  3. [ADR-0014 / SA-1 条款级重写] 物理删除「不要改这里」与逐项「可以/不行」按钮；仅保留「不碰这些，其余照做」按钮（以 `excluded_area_ids` 重新预检，将敏感项移入 `never_touch`）。「确认开工」点击时通过 `applyScopeDecisions` 一并记录授权并提交。
+  4. `E_SCOPE_POLICY` 时，区块顶部显示谓词返回的白话说明；`E_SCOPE_APPROVAL_REQUIRED` 时，点「确认开工」提示敏感项未授权并展开查看。
   5. 方案冻结后区块只读，表态按钮隐藏。
 * **非目标**：不接意图编译器的 `acceptance[]`（第二批）；不提供手写 glob 输入框（SSOT §15.4 明确禁止）。
 * **验收（PASS）**：新增 `tests/ui/scope-acceptance-block.test.tsx`（对应 SSOT `S2-08`）：
-  - 渲染五块标题；路径默认不可见、展开后可见。
+  - 渲染开工前三行白话概览；开工前不含路径树及区域级按钮。
   - 文案中不出现 `token`、`tool`、`**`、`glob`（大小写不敏感）。
-  - 点「不要改这里」→ 以 `excluded_area_ids` 触发预检；点「可以」→ 以 `approvals` 触发预检。
+  - 点「不碰这些，其余照做」→ 以 `excluded_area_ids` 触发预检；开工点击 → 一键授权敏感项并带 `plan_digest` 提交。
   - `manual_only` 夹具显示「没有自动检查」提示。
-  - 冻结态下无任何表态按钮。
+  - 冻结态与验收幕下清单完整且只读。
   - `tests/ui/task-c18-scheme-single-pane.test.tsx` 与 `task-c22` 不回归。
 * **FAIL**：区块显示技术单位或原始合同 JSON；或用户表态未进入预检。
 * **关键文件**：`src/components/studio/ScopeAcceptanceBlock.tsx`（新）、`src/components/studio/SchemeReviewPane.tsx`、`src/routes/index.tsx`
 * **估算**：M
 
 #### 【Task J.7】交接三步进度与右栏解锁（施工对话过渡态） `[NEW_TASK]`
+
+> **ADR-0014 / DEC-005 修订（2026-10-30）**：范围 `3` 的「插入系统消息」改为**中栏画布**卡片，右栏不出现任何 Supervisor 消息；范围 `4` 输入框上方的提示同样移到画布。验收用例「系统消息含节点数」改为「画布卡片含节点数，右栏消息列表无新增系统消息」。
 
 * **任务编号**：`TASK-J.7`
 * **任务名称**：「确认方案」交接 UI + COMMIT 后右栏解锁
@@ -2832,13 +2892,13 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 * **范围**：
   1. 「确认方案」按钮原地切换为三步进度（SSOT §16.3 线框）：「保存你确认的方案」对应 `CLAIM_AND_QUIESCE`～`FREEZE_SNAPSHOT`；「准备隔离的施工区」对应 `SIGN_AND_PREPARE` 的建合同与批准；「安排施工步骤」对应建任务图。`runConfirmSchemeAtomic` 增加可选 `onStage(stage)` 回调驱动进度。
   2. 交接期间右栏输入框禁用，占位文案「正在交接，几秒后可以继续聊」。
-  3. `COMMIT` 成功 → 右栏**解锁**；插入系统消息「开工了。一共 N 步…你可以离开，做完或需要你的时候我会提醒你。」（N = 任务图节点数；时长估算取 `ScopePlan.budget.plain`）。
-  4. **过渡态语义（第二批分流上线前）**：冻结后用户在右栏发送的消息只交给只读搭档作问答（SSOT §16.5 A 类），**不得**调用 `rebuildSchemeFromCorpus`、不得改合同 / 任务图 / Worker 指引；右栏输入框上方显示一行提示「方案已确认。想改需求的话先告诉我，下一版会支持一键记到下一轮。」
+  3. [ADR-0014 / DEC-005 条款级重写] `COMMIT` 成功 → 右栏**解锁**；中栏画布展示卡片「开工了。一共 N 步…你可以离开，做完或需要你的时候我会提醒你。」（N = 任务图节点数；时长估算取 `ScopePlan.budget.plain`）。严禁向右栏注入任何系统消息。
+  4. [ADR-0014 条款级重写] 右栏保持纯净自由对话输入，中栏画布展示过渡态提示；严禁在右栏输入框上方硬编码注入提示。
   5. 失败分支：回到方案态并解锁（沿用既有 `restoreRightChat`）；仅 `E_COMPENSATION_FAILED` 保持锁定并显示「这次准备没清理干净，需要你手动处理」与诊断入口。
 * **非目标**：不做四类分流卡片（第二批）；不做施工幕 UI（第二批）。
 * **验收（PASS）**：新增 `tests/ui/journey-handoff.test.tsx`（对应 SSOT `J-02`）：
   - 点击后依次出现三步进度，交接期间输入框 `disabled`。
-  - 成功后输入框可用，系统消息含节点数。
+  - 成功后输入框可用；画布卡片含节点数，右栏消息列表新增系统消息数为 0。
   - 冻结后发送一条消息：搭档发送函数被调用 1 次，`rebuildSchemeFromCorpus` 调用 0 次，方案 `scheme_revision` 不变。
   - `E_SIGN_AND_PREPARE_FAILED`（补偿成功）→ 解锁；`E_COMPENSATION_FAILED` → 保持锁定并显示诊断入口。
   - `tests/ui/supervisor-studio-approval.test.tsx`、`task-c22` 不回归。
@@ -2902,6 +2962,8 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 #### 【Task J.10】意图编译器生成端与 Daemon 编译循环 `[NEW_TASK]`
 
+> **ADR-0014 / DEC-004 修订（2026-10-30）**：删除范围 `5`（`partner-hint-filter.ts`）及生成 Schema 中的 `partner_hint` 字段；编译器输出不得回流到右栏。编译器实现形态开放（单次结构化调用即可），`compile-loop.ts` 对模型的依赖经可替换接口注入。intent-compiler-prompt §5 的 partner_hint 设计作废，以本修订为准。
+
 * **任务编号**：`TASK-J.10`
 * **任务名称**：编译器 System Prompt、生成 Schema、输出组装与编译循环
 * **对应规格**：SSOT 第三部分 §14.4～§14.8、§14.10；§18 `V-05`、`V-06`、`V-09`；§19 `L-01`、`L-07`。**实施口径**：[`intent-compiler-prompt.md`](./intent-compiler-prompt.md)（与引擎 [`scheme-patch-engine.md`](./scheme-patch-engine.md) 冲突时以引擎为准）
@@ -2914,7 +2976,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
   2. `daemon/supervisor/intent-compiler/system-prompt.ts`：实施口径 §6.2 骨架 + §6.5 八条 few-shot；`COMPILER_PROMPT_VERSION`。
   3. `daemon/supervisor/intent-compiler/render-input.ts`：实施口径 §6.3（nonce 标签、N1～N3 预规范化、AI 回复无别名、墓碑只注入是什么与为什么）。
   4. `daemon/supervisor/intent-compiler/compile-loop.ts`：实施口径 §7（防抖、单在途、只重试 STALE 一次、CAS 落盘、三次失败提示、预算账本、离线兜底）。
-  5. `daemon/supervisor/intent-compiler/partner-hint-filter.ts`：零模型过滤内部词。
+  5. [ADR-0014 / DEC-004 已废止] 物理删除 `partner-hint-filter.ts` 及生成 Schema 中的 `partner_hint` 字段；编译器输出严禁回流到右栏，保持右栏无系统提示与暗中注入。
   6. `demoReady` 改判（§14.10）。
 * **非目标**：不改引擎；不做金标评测脚本（J.11）；不把搭档与编译器合并成一次调用（实施口径 §5.1 已否决）。
 * **依赖与风险**：GAP-1（聊天否决不入墓）、GAP-2（墓碑命中不看 `revival_keys`）已由 J.9a 增补关闭，见 `supervisor.md` §14.11 K-10、K-11。
@@ -2926,7 +2988,7 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
   - `tests/eval/intent-compiler-adversarial.test.ts`：以对抗补丁回放 ADV-01～29 喂引擎，断言 `expected_engine`（确定性，可进 CI）。
   - `tests/ui/intent-compiler-offline.test.tsx`（`V-06`）。
 * **FAIL**：生成 Schema 允许 `occurrence`、`anchor`、`user_confirmed`、`edit` 证据任一出现；模型输出 `base_revision` 或 `compiled_from_turns` 并被采信；op 级丢弃触发重试；提示词出现引擎词表或阈值。
-* **关键文件**：见范围 1～5
+* **关键文件**：见范围 1～4（范围 5 已废止）
 * **估算**：M
 
 #### 【Task J.18】Worker 派工墓地门禁（INV-LEDGER-03 工地侧） `[NEW_TASK]`
@@ -2971,6 +3033,439 @@ TASK-J.2 ScopePlan 纯函数 + 预检构建器      TASK-J.1 右栏搭档只读 
 
 > **J.17 实施硬性要求（C-3 裁决，2026-10-28）**：实施期必须交付一份可枚举的 glob 匹配规则清单，用于判定「非生产产物」，使「免 Worktree 仅限非生产产物」可在运行时强制执行。本 PR 中的最低清单（`docs/**`、`*.md`、`demos/**`、`.stagent/**`）保留为参考基线，不作为最终规则。J.17 目前仅在预告表中，尚无正式任务卡；立卡时须将本条并入其验收条款。
 
+
+### 3.4d 交付全链路 · 目标能力（L 系列 · 2026-10-30 立卡）
+
+> **来源**：用户目标能力 `q17`～`q21`（[`../scheme.md`](../scheme.md) goal-7～goal-10）；审计 [`../reports/delivery-path-audit.md`](../reports/delivery-path-audit.md)。
+> **总装图**：[`delivery-lifecycle.md`](./delivery-lifecycle.md)。里程碑与退出标准见其 §8：**M2 黄金切片**（L.1～L.6 + J 系列修订卡）→ **M3 大项目可控**（L.7～L.13 + J.18）→ **M4 可发布**（L.14～L.16）→ **M5 北极星**（L.17）。
+> **就绪标准**：每张卡按 [`task-card-standard.md`](./task-card-standard.md) 编写；开工前逐条核对 R-1～R-12。
+> **排期纪律**：M2 退出标准（L.6）通过前，不开 M3 的卡。
+> **两条贯穿约束**（审查后补，2026-10-30）：
+> 1. **签署后不改合同**。系统需要的写范围（`tests/stagent/**`、`docs/system/**`）、检查命令、依赖安装权限，一律在签署**前**并入 `ScopePlan`（进入 `plan_digest`）。施工期只允许**收窄**网关输入，不允许扩大或改写合同（supervisor §15.5 D7）。
+> 2. **新检查也必须是真实进程退出码**（ADR-0005 决策 1）。测试义务、测试完整性、知识库漂移都以 Daemon 自带的 `stagent check <kind>` 子命令运行，作为验证命令写进 `verification_spec.commands`，由退出码派生结论。
+>
+> **本节全部为文档立卡，无代码改动，状态均为 `[NEW_TASK]`。**
+
+#### 【Task L.1】右栏纯净化：去掉系统提示与消息前缀（DEC-004） `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.1`
+* **对应规格**：ADR-0014 §1；`scheme.md` conf-2、conf-4、acc-2；`ledger/README.md` DEC-004
+* **前置依赖**：无
+* **优先级**：P1（M2）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：`daemon/chat/baseline-adapter.ts` 调 `streamText` 时带 `system: "你是 Stagent 右栏助手，用简体中文简洁回答。"`；`daemon/chat/session-manager.ts` 在发给右栏前用 `buildProtectionPromptNotice` 把保护清单拼在用户消息前面。
+* **一句话目标**：右栏收到的内容与用户输入逐字节相同，没有任何系统提示或前缀。
+* **范围**：
+  1. `daemon/chat/baseline-adapter.ts`：删除 `system` 字段，`messages` 只含历史与本条用户消息。
+  2. `daemon/chat/session-manager.ts`：删除对 `buildProtectionPromptNotice` 的调用，发送的 `prompt === text`。若 `buildProtectionPromptNotice` 再无调用方，连同其单测一起删除；有调用方则保留函数。
+  3. `daemon/worker/cli-host/claude-code-adapter.ts`：不改行为，只加断言测试，证明 argv 不含系统提示参数。
+* **非目标**：不改右栏只读工具集（J.1）；不改保护清单的物理拦截（P.1，网关仍按清单拒写）。
+* **不变声明**：鉴权、Demo Origin、点亮三证、网关写范围均不变。保护清单从「提示词劝导」变为「仅物理拦截」；右栏本来就没有写工具，所以安全属性不变（ADR-0007 判定口径：删掉提示词后属性仍成立）。
+* **验收（PASS）**：新增 `tests/unit/partner-purity.test.ts`：
+  - `BaselineChatAdapter.run` 调用 `streamText` 时入参不含 `system`（mock `ai` 模块断言）。
+  - 保护清单非空时，`session-manager` 交给适配器的 `prompt` 与用户输入全等。
+  - `ClaudeCodeAdapter.buildLaunch` 的 `args` 不含 `--system-prompt`、`--append-system-prompt`。
+  - `tests/integration/partner-readonly.test.ts` 与 P.1 既有用例不回归。
+* **FAIL**：右栏请求中出现任何非用户撰写的文本；P.1 拦截用例变红。
+* **关键文件**：`daemon/chat/baseline-adapter.ts`、`daemon/chat/session-manager.ts`、`daemon/protection/protection-list.ts`（只读核对调用方）
+* **估算**：S
+
+#### 【Task L.2】Worker 指令补全「你会被这样检查」 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.2`
+* **对应规格**：[`verification-strategy.md`](./verification-strategy.md) §8 第 1 项
+* **前置依赖**：无
+* **优先级**：P1（M2）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：`daemon/worker/session-task-injector.ts::buildWorkerTaskInstruction` 只用 `verification_spec.commands` 决定是否暴露执行工具（约 L227），不把命令写进指令。
+* **一句话目标**：Worker 指令里原样列出验证命令与期望退出码。
+* **范围**：
+  1. `buildWorkerTaskInstruction` 在「输出契约」之前新增一段「你会被这样检查」：逐条列出 `alias`、`executable` + `args` 拼成的 argv 字符串、`expected_exit_code`。
+  2. 命令为空且声明了 `manual_confirmation` 时，输出「本合同没有自动检查，完成后由用户人工确认」。
+  3. 导出 `renderChecksSection(contract, extras?: string[])`，供 L.4（分段义务）与 L.12（知识库规则）追加条目，本卡只实现 `extras` 为空的情形。
+* **非目标**：不列测试义务（L.4）；不列知识库规则（L.12）；不改判卷与执行工具暴露规则。
+* **不变声明**：判卷仍由 Daemon 按退出码派生（ADR-0005）。
+* **验收（PASS）**：新增 `tests/unit/worker-instruction-checks.test.ts`：
+  - 两条命令的合同 → 指令包含两条 argv 字符串与期望退出码，且位于「输出契约」之前。
+  - 无命令 + `manual_confirmation` → 指令含人工确认句，不含命令列表。
+  - `renderChecksSection(contract, ["X"])` 输出包含 `X`。
+  - `tests/unit/worker-adapter.test.ts` 不回归。
+* **FAIL**：指令列出的命令与合同不一致。
+* **关键文件**：`daemon/worker/session-task-injector.ts`
+* **估算**：S
+
+#### 【Task L.3】测试义务：合同元数据、`ScopePlan` 系统范围、证据字段与 `stagent check` `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.3`
+* **对应规格**：[`verification-strategy.md`](./verification-strategy.md) §2、§3.1、§3.4、§3.5、§5；[`delivery-lifecycle.md`](./delivery-lifecycle.md) §6；`scheme.md` acc-7
+* **前置依赖**：`TASK-J.2`（`buildScopePlan`）、`TASK-J.4`（按快照建合同）
+* **优先级**：P1（M2）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：
+  - 合同 `intent.acceptance_criteria` 是无 id、无 `check` 的 `string[]`（`src/lib/contract.schema.ts` 约 L443），无法派生测试义务。
+  - `supervisorMetadataSchema`（约 L278）是非 strict 的 zod 对象，未知键在解析时被剥掉。
+  - 两处 refine 只对「当前版本」生效（约 L520-534），一旦升版，1.3.1 合同的 `manual_confirmation` 与 git 字段校验会失效或误拒。
+  - `reasonCodeSchema` 是 9 值闭集（`src/lib/evidence.schema.ts` L26）。
+* **一句话目标**：合同能追溯到方案验收条目；义务测试的写范围与运行命令在签署前进入 `ScopePlan`；义务结论由真实进程退出码给出。
+* **采用的默认值**：L.11 上线前，义务测试路径为 `tests/stagent/<acceptance_id>.test.<ext>`（`ext` 取项目主语言：`ts` / `js` / `py` / `go`）。
+* **范围**：
+  1. `src/lib/contract.schema.ts`：
+     - `supervisor_metadata` 增加可选 `acceptance_refs: { id, text, check: "auto" | "playtest" | "both" }[]`、`scheme_item_ids: string[]`、`stub_id: string | null`；
+     - `SOFTWARE_CONTRACT_SCHEMA_VERSION` 升为 `"1.3.2"`；
+     - 把两处「仅当前版本」的 refine 改写为版本集合判断（1.3.0 / 1.3.1 / 1.3.2 行为保持现状）。
+  2. J.4 的按快照建合同处：从快照方案的 `acceptance[]` 与合同桩填充上述字段。
+  3. 新建 `src/lib/verification/obligations.ts`（纯函数）：
+     - `detectRunner(repoFacts) → { kind: "vitest" | "jest" | "pytest" | "go" | null, reportArgs: string[] }`；
+     - `deriveObligations(contract, runner) → { obligations: TestObligation[], waived: { acceptance_id, reason: "no_runner" }[] }`；
+     - `obligationCommand(runner, paths) → argv`（vitest `--reporter=json`、jest `--json`、pytest `--junitxml=<file>`、go `test -json`）；
+     - `classifyRun(report) → "red" | "red_invalid" | "green"`。规则：收集到 ≥1 个用例且 ≥1 个断言失败才算 `red`；收集或编译错误算 `red_invalid`。
+  4. `scope-plan-builder.ts`（J.2）增加系统贡献 `withSystemScope(plan, ctx)`：
+     - 方案含 `check: auto/both` 条目且 `detectRunner` 非空时，加入写范围 `tests/stagent/**`；
+     - 加入义务命令，以及 `stagent check obligations` / `stagent check test-integrity` 两条验证命令（argv 精确，进入 `allowed_commands` 与 `plan_digest`）。
+  5. `src/lib/evidence.schema.ts`：
+     - `EvidenceBundle` 增加可选 `obligations: { acceptance_id, test_path, red, green }[]`；
+     - `reasonCodeSchema` 增加 `OBLIGATION_NOT_RED`、`OBLIGATION_RED_INVALID`、`OBLIGATION_NOT_GREEN`、`TEST_WEAKENED`。
+  6. `daemon/guard/test-integrity.ts`：新增 `detectTestWeakening(baseText, candidateText, lang)`（规则见 verification-strategy §5）。
+  7. `bin/stagent.ts`：`CliCommand` 增加 `"check"`，子命令 `obligations`（读运行报告，调用 `classifyRun`）与 `test-integrity`（比对基线与候选），退出码 0 / 1，stdout 输出 JSON。
+* **非目标**：不做两段式编排（L.4）；不生成测试内容；不把义务写进合同正文（义务是运行期产物，存 `.stagent/records/<id>/obligations.json` 与证据）。
+* **不变声明**：网关不变（L.4 改）；`can_merge` 仍只由命令退出码派生。
+* **验收（PASS）**：新增 `tests/unit/test-obligations.test.ts`：
+  - 1.3.1 合同（含 `manual_confirmation`）照常可读；1.3.2 合同的新元数据解析后保留。
+  - `deriveObligations`：两条 `auto` 验收 → 两条义务；`detectRunner` 为空 → 两条均在 `waived`。
+  - `classifyRun`：1 失败 → `red`；收集错误 → `red_invalid`；全过 → `green`；0 用例 → `red_invalid`。
+  - `withSystemScope`：有 `auto` 条目时 `writable_paths` 含 `tests/stagent/**`，`plan_digest` 随之变化；无条目时不变。
+  - `detectTestWeakening`：删一条 `expect(` → weakened；新增 `it.only` / `.skip` / `@pytest.mark.skip` → weakened；只增断言 → 不 weakened。
+  - `stagent check obligations` 对夹具报告分别以 0 / 1 退出。
+* **FAIL**：签署后合同被改写；1.3.1 合同读取失败；义务结论不来自进程退出码。
+* **关键文件**：`src/lib/contract.schema.ts`、`src/lib/evidence.schema.ts`、`src/lib/verification/obligations.ts`（新）、`daemon/supervisor/scope-plan-builder.ts`（J.2 新建）、`daemon/guard/test-integrity.ts`、`bin/stagent.ts`
+* **估算**：M
+
+#### 【Task L.4】两段式施工编排：先红后绿 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.4`
+* **对应规格**：[`verification-strategy.md`](./verification-strategy.md) §3.2、§3.3、§3.5、§8 第 2 项
+* **前置依赖**：`TASK-L.3`、`TASK-L.2`
+* **优先级**：P1（M2）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：
+  - `daemon/pipeline/orchestrator.ts` 一次性运行 Worker 后提交并验证（约 L778），Worker 可以同时写实现与测试。
+  - `scopeExplicitlyIncludesTests`（`daemon/guard/test-integrity.ts` L46）对整组 `writable_paths` 做一次 `some()`：只要有一条测试路径，任何测试文件都可写。
+* **一句话目标**：Worker 先只写义务测试并被证明「红」，再在这些测试只读的情况下实现并被证明「绿」。
+* **范围**：
+  1. 网关（`daemon/mcp/gateway.ts`）增加**运行期收窄**入参 `phaseOverlay?: { testWriteAllowlist?: string[]; extraForbidden?: string[] }`：
+     - `testWriteAllowlist` 存在时，测试文件只有列表内的路径可写；
+     - `extraForbidden` 并入禁止判定（优先于可写，复用 `src/lib/scope.ts::checkWriteAccess` 的禁止优先顺序）。
+
+     收窄只能比合同更窄，不持久化、不改合同。
+  2. `orchestrator.ts`：存在未豁免义务时分两段：
+     - **T 段**：`phaseOverlay = { testWriteAllowlist: 义务路径 }`，并把非测试的写范围全部放进 `extraForbidden`；结束提交记 `red_sha`；运行义务命令，`stagent check obligations --phase t`：`red` 进入 I 段，`red_invalid` / `green` 回 T 段返工（计入 `max_verification_retries`）。
+     - **I 段**：`phaseOverlay = { extraForbidden: T 段写过的文件 }`；结束后照现有流程验证（含 `stagent check obligations --phase i` 判绿）。
+     - **回 T 段**：I 段义务判绿连续失败 2 次时，允许回到 T 段一次（附失败输出）；再失败 → `PENDING_RESUME`，原因写入 `.stagent/records/<id>/suspension.json`。
+  3. 全部义务均被豁免时，跳过 T 段，行为与现在一致；合入卡显示豁免白话（verification-strategy §3.5）。
+  4. `renderChecksSection(contract, extras)`（L.2）在 T / I 段分别追加本段义务清单。
+  5. 证据写入 `obligations`（L.3 字段）。
+* **非目标**：不生成测试内容；不做 DesignNote（L.11）。
+* **不变声明**：**网关有变更**（新增运行期收窄入参，依据本卡与 ADR-0005 / ADR-0001：只收窄不放宽）；鉴权、Demo Origin、点亮三证不变。
+* **验收（PASS）**：新增 `tests/integration/two-phase-construction.test.ts`（桩 Worker）：
+  - T 段写一条基线失败的测试 → 进入 I 段；T 段试图写实现文件 → 网关拒绝。
+  - T 段测试有语法错误 → `OBLIGATION_RED_INVALID`，返工计数 +1。
+  - T 段测试在基线上通过 → `OBLIGATION_NOT_RED`。
+  - I 段试图写 T 段测试文件，或写未列出的既有测试 → 网关拒绝。
+  - I 段实现后判绿 → `obligations[0].green.exit_code === 0` 且 `can_merge === true`。
+  - I 段连续 2 次判绿失败 → 回到 T 段一次。
+  - 全部豁免 → 只运行一段，与 `tests/e2e/happy-path.spec.ts` 结果一致。
+* **FAIL**：I 段能修改 T 段测试；收窄被持久化进合同；无义务合同行为改变。
+* **关键文件**：`daemon/pipeline/orchestrator.ts`、`daemon/mcp/gateway.ts`、`src/lib/scope.ts`（只读复用）、`daemon/worker/session-task-injector.ts`
+* **估算**：M
+
+#### 【Task L.5】真实预览：在 Worktree 里启动用户应用 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.5`
+* **对应规格**：[`verification-strategy.md`](./verification-strategy.md) §7；`scheme.md` gap-15
+* **前置依赖**：无
+* **优先级**：P1（M2）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：`daemon/supervisor/preview/real-preview-server.ts` 只服务静态目录或登记已有 URL；都没有时 `daemon/server.ts`（约 L861）写占位页。没有任何代码在 Worktree 里执行 `dev` / `start`。
+* **一句话目标**：施工完成后，中栏试玩加载的是 Worktree 里正在运行的真实应用。
+* **范围**：
+  1. 新建 `daemon/supervisor/preview/app-runner.ts`：`pickPreviewCommand(worktreeDir)`（`dev` → `start` → `preview`，读 `package.json`）；`startAppPreview({ worktreeDir, port })` 用 `daemon/worker/cli-host/process-host.ts::spawnManaged` 启动长驻进程（`runCommand` 只在进程退出时返回，不适用），`PORT` 注入，环境走 `daemon/runner/env-filter.ts` 白名单；`waitReady(port, { intervalMs, timeoutMs })`（默认 500 / 30000，可注入，测试用 3000）；`stopAppPreview(handle)` 复用 `daemon/runner/process-tree.ts`。预览是 Daemon 自有进程（与 Demo 预览服务同类），不进合同 `allowed_commands`，不改合同。
+  2. 端口从 `daemon/supervisor/preview/types.ts` 的真机预览段（4200～4210）分配。
+  3. 就绪后以「登记已有 URL」模式注册到 real-preview-server；`RealPlaytestPane` 无需改协议。
+  4. 合入、放弃、`ABORTED`、Daemon 退出四个时机回收进程组。
+  5. 选不到命令时回退到现有静态目录模式；仍无 → 白话「这个项目没有可预览的页面」。
+* **非目标**：不做发布（L.15）；不做反向代理；不改 Demo 预览（4100～4110）。
+* **不变声明**：Demo Origin 隔离不变（ADR-0008）；预览进程退出码不进 `can_merge`。
+* **验收（PASS）**：新增 `tests/unit/app-preview-runner.test.ts`（夹具：一个 `dev` 脚本启动最小 HTTP 服务的临时仓库）：
+  - `pickPreviewCommand`：有 `dev` 取 `dev`；只有 `start` 取 `start`；都没有返回 `null`。
+  - 启动后 `waitReady` 在 30 秒内返回 true，GET 端口得到 200。
+  - 夹具脚本不监听端口 → 注入 `timeoutMs: 3000` 后返回失败，结果含 stderr 尾部。
+  - `stopAppPreview` 后端口可再次绑定。
+* **FAIL**：预览进程在合入后仍存活；端口落在 4100～4110。
+* **关键文件**：`daemon/supervisor/preview/app-runner.ts`（新）、`daemon/supervisor/preview/real-preview-server.ts`、`daemon/server.ts`、`daemon/worker/cli-host/process-host.ts`、`daemon/runner/process-tree.ts`、`daemon/runner/env-filter.ts`
+* **估算**：M
+
+#### 【Task L.6】黄金切片端到端测试（M2 退出标准） `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.6`
+* **对应规格**：[`delivery-lifecycle.md`](./delivery-lifecycle.md) §8 M2
+* **前置依赖**：`TASK-L.1`～`L.5`、`TASK-J.2`～`J.10`（含各卡「ADR-0014 修订」）
+* **优先级**：P1（M2 收口）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：`tests/e2e/happy-path.spec.ts` 从已批准合同开始，不覆盖「右栏一句话 → 方案 → 确认开工」；`scripts/mainline-regression.mjs` 只针对 Stagent 自身节点。
+* **一句话目标**：一条自动化测试证明「一句话需求 → 一次开工 → 真实预览 → 一次合入」全程跑通，用户只点 2 次。
+* **范围**：
+  1. 新建 `tests/e2e/golden-slice.test.ts`：临时夹具仓库（有 `dev`、`test`、`typecheck` 脚本）；替身模型端点（复用 J.1 验证用的 stub 思路）返回固定的编译补丁与 Worker 输出。
+  2. 步骤：右栏发一条消息 → 断言中栏方案出现 → 调用「确认开工」API（第 1 次点击）→ 等待验证完成 → 断言证据含红绿义务 → 断言真实预览 URL 可访问 → 调用「合入」API（第 2 次点击）→ 断言 `MERGED` 且主分支有 `Stagent-Contract-ID` Trailer。
+  3. 把该测试加入 `scripts/mainline-regression.mjs` 的清单。
+* **非目标**：不测多合同（M3）；不测发布（M4）。
+* **不变声明**：只新增测试。
+* **验收（PASS）**：
+  - `golden-slice.test.ts` 通过；
+  - 全程调用的用户授权类 API 恰好 2 次；
+  - 过程中右栏收到的请求不含任何非用户文本（复用 L.1 断言）。
+* **FAIL**：需要第 3 次用户点击；预览为占位页。
+* **关键文件**：`tests/e2e/golden-slice.test.ts`（新）、`scripts/mainline-regression.mjs`
+* **估算**：M
+
+#### 【Task L.7】`ProjectPlan` 类型、校验与存储 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.7`
+* **对应规格**：[`project-decomposition.md`](./project-decomposition.md) §2、§3、§6、§8；ADR-0015
+* **前置依赖**：`TASK-L.6`（M2 收口后才开 M3）
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：全库无项目级计划；任务图一份合同一张（`src/lib/journey/proposal-from-contract.ts`）。
+* **一句话目标**：项目计划有类型、有确定性校验、有带版本的落盘。
+* **范围**：
+  1. 新建 `src/lib/project/project-plan.ts`：§2 全部类型（含 `origin`、`context`、`dependency` 种类与系统验收条目常量 `SYSTEM_ACCEPTANCE`）；`validateProjectPlan(plan, scheme, repoFacts) → { ok, violations: { rule: "D-1"…"D-11", target }[] }`（纯函数；`repoFacts` 由调用方传入：是否有测试脚本、是否有 `docs/system/modules.yaml`、存在的目录列表）。
+  2. 新建 `daemon/project/plan-store.ts`：`readPlan(repoRoot)`、`writePlan(repoRoot, plan)`（写 `.stagent/project/plan.json`，旧版写入 `plan.revisions/<revision>.json`；原子写：临时文件 + rename）。
+  3. 错误码 `E_PLAN_INVALID`、`E_PLAN_STALE`、`E_PLAN_STUB_LOCKED`、`E_PLAN_STUB_TOO_LARGE`、`E_PLAN_STUB_REVIVED` 登记进 `src/lib/error-codes.ts`。
+* **非目标**：不做补丁合并（L.8）；不做分解器；不做 UI。
+* **不变声明**：不触及合同、网关、状态机。
+* **验收（PASS）**：新增 `tests/unit/project-plan.test.ts` 覆盖 project-decomposition §8 的 PD-01～PD-07、PD-12、PD-13；`tests/daemon/plan-store.test.ts`：写入后读回等值；第二次写入后 `plan.revisions/1.json` 存在。
+* **FAIL**：校验依赖文件系统；同一输入两次校验结果不同。
+* **关键文件**：`src/lib/project/project-plan.ts`（新）、`daemon/project/plan-store.ts`（新）、`src/lib/error-codes.ts`
+* **估算**：M
+
+#### 【Task L.8】计划补丁合并与分解器 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.8`
+* **对应规格**：[`project-decomposition.md`](./project-decomposition.md) §1、§4、§8（PD-08、PD-09、PD-11）
+* **前置依赖**：`TASK-L.7`、`TASK-J.9`（方案结构）
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：无分解逻辑。
+* **一句话目标**：方案冻结前，分解器产出计划补丁；Daemon 确定性合并，不合规整体拒绝。
+* **范围**：
+  1. `src/lib/project/plan-patch.ts`：`PlanPatch` / `PlanOp` 类型；`applyPlanPatch(plan, patch, scheme, repoFacts)`（纯函数，规则见 §4；合并后调 `validateProjectPlan`）。
+  2. `daemon/supervisor/decomposer/decompose.ts`：输入方案（`SchemeDraftV2`）+ `repoFacts`，输出 `PlanPatch`（`reason: "initial"`）。实现形态开放（同 ADR-0014 §1）：单次结构化模型调用，输出用 zod Schema 约束；`size_hint === "standard"` 时不调模型，确定性生成单里程碑单桩。
+  3. 合并失败时把 `violations` 回喂分解器重试一次；仍失败 → 画布白话「这个需求我还没拆好」，不生成合同。
+  4. HTTP `POST /api/project/plan/patch`（带 session token）：只接受用户发起的 `remove_stub`（`removed_by: "user"`）与 `reorder`，其余 op 返回 422；供 L.10 调用。
+  5. 方案在两份合同之间变化时：§16.5 C 类（新需求）→ `add_stub`；B 类（本轮范围内补充）不产生计划补丁，仍并入当前合同（project-decomposition §5）。
+* **非目标**：不做合同序列（L.9）；不做 UI（L.10）。
+* **不变声明**：计划不是授权凭据；不改签署链。
+* **验收（PASS）**：`tests/unit/plan-patch.test.ts`：PD-08、PD-09、PD-11；`standard` 方案零模型调用得到 1 里程碑 1 桩；桩模型返回违反 D-7 的补丁 → 重试 1 次 → 第二次合法则合并成功。
+* **FAIL**：对 `merged` 桩的修改被采纳；用户删除的桩被同义复活且未报 `E_PLAN_STUB_REVIVED`。
+* **关键文件**：`src/lib/project/plan-patch.ts`（新）、`daemon/supervisor/decomposer/decompose.ts`（新）、`daemon/server.ts`
+* **估算**：M
+
+#### 【Task L.9】合同序列、桩视图预检与「下一份」交接 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.9`
+* **对应规格**：[`project-decomposition.md`](./project-decomposition.md) §5、§8（PD-10）
+* **前置依赖**：`TASK-L.8`、`TASK-J.4`、`TASK-J.5`
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：J.2 `buildScopePlan` 以整份方案为输入；合入后没有「下一份」的概念。
+* **一句话目标**：合入一份后，系统自动选出下一份并为它预检范围；用户只需再点一次「确认开工」。
+* **范围**：
+  1. `src/lib/project/next-stub.ts`：`nextStub(plan)`（规则见 §5）。
+  2. `src/lib/project/stub-view.ts`：`schemeViewForStub(scheme, stub)` → 只含该桩 `scheme_item_ids` 的方案视图 + `area_hints`，作为 `buildScopePlan` 的 `scheme` 入参。
+  3. 合同生成时写入 `supervisor_metadata.scheme_item_ids` 与 `supervisor_metadata.stub_id`；合入后回填桩 `status: "merged"`、`contract_id`。
+  4. **合同级互斥**：签署路径（J.5 确认 / J.4 建合同）检查是否已有合同处于 `PREPARING`～`AUDITED`；有则拒绝 `409 E_CONTRACT_IN_FLIGHT`（现行代码只有 Daemon 进程锁 `daemon/core/pid-lock.ts`，`server.ts` 的 `activeContracts` 未被填充）。错误码登记进 `src/lib/error-codes.ts`。
+  5. **按桩种类的签署前范围规则**（project-decomposition §5.1）：`test_foundation` / `dependency` 桩在 `buildScopePlan` 中加入 `dependency_changes_allowed: true`、精确安装命令（如 `npm install -D vitest`）、`network_policy: "EXPLICIT_TARGETS"`（目标仅包管理器注册表域名），锁文件进入 `needs_approval`（由 SA-1 一次点击授权）。
+  6. 合同 `ABORTED` → 桩 `aborted` → 若 `nextStub` 返回 `null` 且仍有 `planned`，触发 L.8 重新分解（`reason: "contract_aborted"`）。
+* **非目标**：不做项目地图 UI（L.10）。
+* **不变声明**：每份合同仍单独签署；新增合同级互斥是对 ADR-0002「单工作区串行」的落实。
+* **验收（PASS）**：`tests/unit/next-stub.test.ts`：PD-10；`tests/integration/contract-sequence.test.ts`：两桩计划，合入第一份后 `nextStub` 返回第二份，其 `ScopePlan` 只含第二份的区域；第一份 `ABORTED` 时第二份（依赖第一份）不可选，并触发重新分解调用；第一份处于 `EXECUTING` 时签第二份 → `E_CONTRACT_IN_FLIGHT`；`test_foundation` 桩的 `ScopePlan` 含安装命令与 `EXPLICIT_TARGETS`。
+* **FAIL**：上一份未终结时能签下一份；`ScopePlan` 混入其他桩的区域。
+* **关键文件**：`src/lib/project/next-stub.ts`（新）、`src/lib/project/stub-view.ts`（新）、`daemon/server.ts`（合入回调处）
+* **估算**：M
+
+#### 【Task L.10】画布「项目地图」视图 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.10`
+* **对应规格**：[`project-decomposition.md`](./project-decomposition.md) §7
+* **前置依赖**：`TASK-L.9`、`TASK-L.8`
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：中栏只有单合同方案与施工视图。
+* **一句话目标**：用户在中栏一眼看到整个项目：几个里程碑、每份做到哪、下一份是什么。
+* **范围**：
+  1. `GET /api/project/plan`（`daemon/server.ts`，带 session token）返回计划 + 每桩状态。
+  2. 新建 `src/components/project/ProjectMapPane.tsx`：里程碑列表、桩卡片、「下一份」高亮 +「确认开工」按钮（复用 J.5 确认流程）、「先不做这个」「这个往前排」两个操作（调用 L.8 的 `POST /api/project/plan/patch`）。
+  3. ActivityBar 增加「项目」入口（可关闭 Tab，沿用 `STUDIO_TAB_ID` 同款机制）。
+* **非目标**：不展示文件路径、glob、Token 单位；不允许在地图上编辑桩内容。
+* **不变声明**：前端只经 `src/lib/daemon-api.ts` 调接口，不自行推导状态。
+* **验收（PASS）**：`tests/ui/project-map-pane.test.tsx`：渲染两个里程碑三份桩；「下一份」高亮唯一；页面文本不含 `**`、`glob`、`token`；点「先不做这个」调用补丁接口一次且 `removed_by: "user"`。
+* **FAIL**：地图显示技术单位；前端自行计算「下一份」。
+* **关键文件**：`src/components/project/ProjectMapPane.tsx`（新）、`src/components/layout/ActivityBar.tsx`、`src/lib/daemon-api.ts`、`daemon/server.ts`
+* **估算**：M
+
+#### 【Task L.11】DesignNote 生成、校验与注入 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.11`
+* **对应规格**：[`technical-design-and-knowledge.md`](./technical-design-and-knowledge.md) §2、§3、§6（TD-01～TD-05）；ADR-0016
+* **前置依赖**：`TASK-L.4`、`TASK-L.9`（DN-2 插入依赖桩）
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：Worker 直接从合同开工，没有设计产物；技术决策不被记录。
+* **一句话目标**：每份合同开工时先出一份通过校验的设计说明，Worker 按它施工，五类决策才打扰用户。
+* **范围**：
+  1. 新建 `src/lib/knowledge/modules-schema.ts`：`modules.yaml` 的 zod Schema 与 `ModuleEntry` 类型（L.12 复用）。
+  2. 新建 `src/lib/design/design-note.ts`：§2.2 类型；`validateDesignNote(note, contract, modules)`（DN-1～DN-5）；`detectEscalations(note, protectionList, paidSdkList)`（§3 二次判定）。
+  3. 新建 `daemon/supervisor/design/design-step.ts`：输入合同 + `docs/system/`（若存在），输出 DesignNote（形态开放；zod Schema 约束）；落盘 `.stagent/records/<id>/design-note.json`。
+  4. `orchestrator.ts`：进入 `EXECUTING` 后、T 段之前调用设计步骤；校验失败重试 1 次，仍失败 → `EXECUTING → PENDING_RESUME`；有升级项 → `PENDING_RESUME`。原因（`DESIGN_INVALID` / `DESIGN_ESCALATION` / `DESIGN_NEEDS_DEPENDENCY`）写入 `.stagent/records/<id>/suspension.json`（现行 `PENDING_RESUME` 迁移不带原因字段；这些不是证据原因码，不进 `reasonCodeSchema`）。
+  5. **DN-2（需要新依赖但合同不允许）**：设计步骤先重试一次「不引入依赖」；仍需要 → 意外卡「需要装新库 X」：选「可以」→ 本合同安全中止（`ABORTED`），经 L.8 补丁在原桩前插入 `kind: "dependency"` 桩，原桩随后重签；选「不用」→ 本合同按无依赖方案继续或中止，由用户在卡上二选一。**不修改已签合同**。
+  6. DesignNote 的 `test_plan` 覆盖 L.3 约定路径（必须落在签署前已进 `ScopePlan` 的 `tests/stagent/**` 内），写入 `.stagent/records/<id>/obligations.json`；`buildWorkerTaskInstruction` 注入「技术方案」段（§2.4）。
+  7. `src/lib/design/paid-sdk-list.ts`：付费 SDK 名单（初版：stripe、twilio、@google/maps、openai、@anthropic-ai/sdk、aws-sdk、@aws-sdk/*）。
+* **非目标**：不做知识库校验（L.12）。
+* **不变声明**：不新增生命周期状态或迁移边。
+* **验收（PASS）**：`tests/unit/design-note.test.ts`：TD-01～TD-05；`tests/integration/design-step.test.ts`：桩设计步骤返回合法 DesignNote → Worker 指令含「技术方案」段与 `touches` 路径；返回含 `costs_money` 的决策 → 合同 `PENDING_RESUME` 且 `suspension.json` 原因为 `DESIGN_ESCALATION`；DN-2 选「可以」→ 原合同 `ABORTED`、计划出现 `dependency` 桩、原合同 JSON 字节未变。
+* **FAIL**：未校验的 DesignNote 被注入 Worker；二次判定命中却未升级。
+* **关键文件**：`src/lib/knowledge/modules-schema.ts`（新）、`src/lib/design/design-note.ts`（新）、`src/lib/design/paid-sdk-list.ts`（新）、`daemon/supervisor/design/design-step.ts`（新）、`daemon/pipeline/orchestrator.ts`、`daemon/worker/session-task-injector.ts`
+* **估算**：M
+
+#### 【Task L.12】系统知识库：Schema、引导合同与漂移门禁 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.12`
+* **对应规格**：[`technical-design-and-knowledge.md`](./technical-design-and-knowledge.md) §4、§6（TD-06～TD-10）；ADR-0016；`scheme.md` acc-8
+* **前置依赖**：`TASK-L.11`
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：目标项目没有任何系统描述；`daemon/arch/graph.ts::buildDependencyGraph` 结果不落盘。
+* **一句话目标**：每份合同合入时，目标仓库的 `docs/system/` 都覆盖本次改动；漂移即判不合格。
+* **范围**：
+  1. `src/lib/knowledge/modules-schema.ts`（L.11 已建）增加 `coversPath(modules, path)`，glob 匹配复用 `src/lib/scope.ts::matchesAnyPattern`。
+  2. 新建 `daemon/knowledge/check-knowledge.ts`：`checkKnowledge({ worktreeDir, baseSha, candidateSha, designNote }) → { ok, failures: { rule: "KB-1"…"KB-5", target }[] }`；由 `bin/stagent.ts` 子命令 `stagent check knowledge` 以真实进程调用（退出码 0 / 1，ADR-0005），作为验证命令排在 V2 之后；失败 → 证据 `FAILED`、原因码 `KNOWLEDGE_DRIFT`。
+  3. `withSystemScope`（L.3）扩展：目标仓库已有 `docs/system/modules.yaml`，或本桩为 `knowledge_bootstrap` 时，在签署前把 `docs/system/**` 与 `stagent check knowledge` 并入 `ScopePlan`；`daemon/mcp/gateway.ts` 的文件预算计数（约 L1117）排除 `docs/system/**`。
+  4. 新建 `daemon/knowledge/bootstrap-draft.ts`：`draftModules(repoRoot)`：顶层源码目录 → 候选模块，`buildDependencyGraph` → `depends_on`（确定性）。`knowledge_bootstrap` 合同的设计步骤以它为输入。
+  5. `reasonCodeSchema`（`src/lib/evidence.schema.ts`）增加 `KNOWLEDGE_DRIFT`。
+  6. `renderChecksSection` 追加 KB-1～KB-5 规则摘要（verification-strategy §8 第 3 项）。
+* **非目标**：不做「为什么有这段代码」入口（L.13）；不做系统地图 UI（随 L.10 第二页，另卡）。
+* **不变声明**：网关写范围判定函数不变，只扩合同范围。
+* **验收（PASS）**：`tests/unit/knowledge-check.test.ts`：TD-06～TD-08、TD-10；`tests/unit/knowledge-bootstrap.test.ts`：TD-09。
+* **FAIL**：未覆盖的改动文件仍 `can_merge`；`docs/system/**` 写入占用文件预算。
+* **关键文件**：`src/lib/knowledge/modules-schema.ts`（新）、`daemon/knowledge/check-knowledge.ts`（新）、`daemon/knowledge/bootstrap-draft.ts`（新）、`bin/stagent.ts`、`daemon/mcp/gateway.ts`、`src/lib/scope.ts`（只读复用）、`daemon/arch/graph.ts`（只读复用）
+* **估算**：M
+
+#### 【Task L.13】追踪链：Trailer 扩展与「这段为什么存在」反查 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.13`
+* **对应规格**：[`delivery-lifecycle.md`](./delivery-lifecycle.md) §6；[`technical-design-and-knowledge.md`](./technical-design-and-knowledge.md) §5
+* **前置依赖**：`TASK-L.9`（合同带 `scheme_item_ids`）、`TASK-L.12`（`changelog.md` 条目保证存在）
+* **优先级**：P2（M3）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：`daemon/pipeline/merger.ts` 的 Trailer 只到合同与证据（约 L204）；没有方案条目；没有反查入口。
+* **一句话目标**：任意一行合入的代码，都能一键反查到合同、方案条目和用户原话。
+* **范围**：
+  1. `merger.ts`：新增 Trailer `Stagent-Scheme-Items: goal-3,acc-5`（来自合同 `supervisor_metadata.scheme_item_ids`）；超出 512B 单行上限时截断为合同号，并在 `docs/system/changelog.md` 条目中保留全量（L.12 已保证条目存在）。
+  2. 新建 `daemon/trace/why.ts`：`explainLine({ repoRoot, path, line })` → `git blame --porcelain` 取提交 → 解析 Trailer → 读合同、方案快照 → 返回 `{ commit, contract_id, scheme_items: { id, text, quotes: { qid, text }[] }[] }`；任一环缺失返回 `E_TRACE_BROKEN` 并指出断在哪一环。
+  3. `GET /api/trace/why?path=&line=`；编辑器右键「这段为什么存在」调用并以白话卡片显示。
+  4. 错误码 `E_TRACE_BROKEN` 登记。
+* **非目标**：不做影响分析（另卡）。
+* **不变声明**：Trailer 既有键不变；512B / 4KB 上限不变。
+* **验收（PASS）**：`tests/integration/trace-why.test.ts`：夹具仓库合入一份带 `scheme_item_ids` 的合同 → 对新增行调用 `explainLine` 返回原话；对合入前已存在的行返回 `E_TRACE_BROKEN`（断在「提交无 Stagent Trailer」）；超长条目列表时 Trailer 单行 ≤512B。
+* **FAIL**：Trailer 超长导致合并失败；反查返回编造的原话。
+* **关键文件**：`daemon/pipeline/merger.ts`、`daemon/trace/why.ts`（新）、`daemon/server.ts`、`src/components/MonacoEditorPane.tsx`
+* **估算**：M
+
+#### 【Task L.14】凭据保险库 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.14`
+* **对应规格**：[`release-and-operations.md`](./release-and-operations.md) §4；ADR-0014 §3；`scheme.md` conf-6、oq-3
+* **前置依赖**：`TASK-L.6`；**OQ-REL-1 裁决**（存储后端）
+* **优先级**：P2（M4）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：只有模型 Key 的内存存储（`daemon/worker/key-store.ts`）；无通用密钥存储；`daemon/runner/command-runner.ts::redactSecrets(text, secretValues)` 已支持精确值遮蔽，但跳过 6 个字符以下的值；`daemon/core/debug-log.ts` 另有一份不支持精确值的 `redactSecrets`。
+* **采用的默认值**：OQ-REL-1 未裁决前按推荐值 A（系统钥匙串）实现，Linux 无 Secret Service 时回退 B（`.stagent/vault.enc`）。用户改判时只换存储后端，接口不变。
+* **一句话目标**：用户的密钥只存在保险库里，只在发布与外网摄取时注入进程环境，任何日志、证据、模型输入里都找不到明文。
+* **范围**：
+  1. 新建 `daemon/vault/vault.ts`：`setSecret(name, value)`、`listNames()`、`deleteSecret(name)`、`resolveEnv(names) → Record<string,string>`（仅 Daemon 内部调用）；后端适配 `keychain-backend.ts` / `file-backend.ts`。
+  2. HTTP：`PUT /api/vault/:name`（只写）、`GET /api/vault`（只返回名字）、`DELETE /api/vault/:name`。永不返回值。
+  3. 脱敏：所有命令输出经 `command-runner.ts::redactSecrets(text, vault.currentValues())` 遮蔽；`debug-log.ts` 的 `redactSecrets` 同样接受并使用保险库值。`setSecret` 拒绝短于 8 个字符的值（`E_VAULT_VALUE_TOO_SHORT`，保证遮蔽可靠）。
+  4. 设置页新增「密钥」区（`src/components/settings/SettingsTab.tsx`）：掩码输入、列表、删除。
+* **非目标**：不做发布（L.15）；不做外网摄取（L.17）。
+* **不变声明**：模型 Key 存储方式不变（`key-store.ts`）；Worker 环境白名单不变，保险库值不进 Worker。
+* **验收（PASS）**：`tests/daemon/vault.test.ts`：设值后 `GET /api/vault` 只含名字；`resolveEnv` 返回值；对含该值的字符串调用 `redactSecrets` → `[REDACTED]`；Worker 指令构建、Supervisor 输入构建对一个含该值的上下文进行全文搜索 → 0 命中（RO-08）。
+* **FAIL**：任何 HTTP 响应出现密钥明文；值写入 `.stagent/` 明文文件。
+* **关键文件**：`daemon/vault/*`（新）、`daemon/runner/env-filter.ts` 或 `redactSecrets` 所在模块、`src/components/settings/SettingsTab.tsx`、`daemon/server.ts`
+* **估算**：M
+
+#### 【Task L.15】发布生命周期与两类部署目标 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.15`
+* **对应规格**：[`release-and-operations.md`](./release-and-operations.md) §1～§3、§6、§7（RO-01～RO-09）；ADR-0017；`scheme.md` acc-9
+* **前置依赖**：`TASK-L.14`
+* **优先级**：P2（M4）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：deploy / release / health_check 全库 0 命中；合并即终点。
+* **一句话目标**：用户点一次「发布」，已合并的提交被构建、部署、探活；失败自动回到上一个能用的版本。
+* **范围**：
+  1. 新建 `src/lib/release/release.ts`：`ReleaseRecord`、`ReleaseState`、`RELEASE_TRANSITIONS`、`canTransition`（纯函数）；不变式 R-INV-1～3 的校验函数。
+  2. 新建 `daemon/release/release-manager.ts`：创建草稿、执行（build → deploy → health → 失败回滚）、持久化 `.stagent/releases/<id>.json`；导出干净目录 `.stagent/releases/<id>/checkout`：用 `git archive <sha> | tar -x`（只读 git，不创建 worktree 元数据，避开 ADR-0002 背景中的并发 `worktree add` 锁问题）；构建前执行检测到的安装命令（`npm ci` 等），复用全局包缓存只读侧（ADR-0002）。
+  3. 新建 `daemon/release/target-adapter.ts` 与 `targets/local-process.ts`、`targets/user-command.ts`；目标配置 `.stagent/release-targets.json`。
+  4. 一次性命令（install、build、`user_command` 部署、健康命令）经 `command-runner.ts`；`local_process` 长驻进程经 `spawnManaged`（同 L.5）。保险库值只注入 deploy 与 health 步骤（`vault.resolveEnv(target.env_keys)`），不注入 install / build（build 只拿目标配置中的明文 `build_env`）；`log_tail` 经脱敏。
+  5. `local_process` 部署顺序：停当前 LIVE 进程 → 启新版本 → 探活；失败 → 停新版本 → 以上一个 LIVE 的导出目录重启 → 探活。手动「回滚」= 以上一个 LIVE 的 `commit_sha` 新建一次发布（不新增状态迁移）。
+  6. HTTP：`POST /api/releases`（草稿）、`POST /api/releases/:id/run`（用户点击）、`POST /api/releases/:id/rollback`、`GET /api/releases`。
+  7. 画布「发布」页（`src/components/release/ReleasePane.tsx`）：选目标、发布、进度、回滚。
+* **非目标**：不做云平台适配器；不做线上问题回流（L.16）。
+* **不变声明**：合同状态机与 `MERGED` 终态不变（ADR-0012）。
+* **验收（PASS）**：`tests/unit/release-state.test.ts`：转移表与 R-INV-1～3；`tests/integration/release-local-process.test.ts`：RO-01～RO-03；`tests/integration/release-user-command.test.ts`：RO-06、RO-07、RO-09；RO-04、RO-05 在 `release-manager` 单测中覆盖。
+* **FAIL**：发布失败改变了任何合同的状态；日志出现密钥明文。
+* **关键文件**：`src/lib/release/release.ts`（新）、`daemon/release/*`（新）、`src/components/release/ReleasePane.tsx`（新）、`daemon/server.ts`
+* **估算**：M（如超出，拆为「状态机 + 存储」与「目标适配器 + UI」两卡）
+
+#### 【Task L.16】线上问题回流 `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.16`
+* **对应规格**：[`release-and-operations.md`](./release-and-operations.md) §5、§7（RO-10）
+* **前置依赖**：`TASK-L.15`、`TASK-L.9`
+* **优先级**：P3（M4）
+* **状态**：`[NEW_TASK]`
+* **对照痛点（代码事实）**：无运行监测；合入后的缺陷只能靠用户重新描述。
+* **一句话目标**：线上应用出错时，画布出现「线上」卡，用户点一下就生成一份带现场信息的修复合同。
+* **范围**：
+  1. `release-manager.ts`：`local_process` 进程退出时记录退出码与脱敏 stderr 尾部；LIVE 后每 60 秒探活（目标配置 `watch: false` 可关）。
+  2. 新建 `src/components/release/LiveIncidentCard.tsx`：「<目标> 停了，最后的错误是…」+「让 AI 看看」。
+  3. 「让 AI 看看」→ 生成 `PlanPatch`：`add_stub` 置顶，`kind: "feature"`，`title` 为白话，`origin: "system"`，`context: { release_id, commit_sha, log_tail }`（L.7 字段），按 project-decomposition §2 放置规则插入。
+  4. supervisor §16.5 分流新增 E 类「线上问题」的判定函数（`src/lib/journey/intent-router.ts`）：消息含 LIVE 目标名或「线上 / 上线后 / 生产」且无施工中合同。
+* **非目标**：不做告警推送到外部渠道；不做热修。
+* **不变声明**：合并后缺陷开新微合同（supervisor §5），不在 `MERGED` 合同上返工。
+* **验收（PASS）**：`tests/integration/live-incident.test.ts`：RO-10；`tests/unit/intent-router.test.ts` 新增 E 类判定用例（命中两条、不命中两条）。
+* **FAIL**：回流修改了已合并合同；日志尾部含密钥明文。
+* **关键文件**：`daemon/release/release-manager.ts`、`src/components/release/LiveIncidentCard.tsx`（新）、`src/lib/journey/intent-router.ts`
+* **估算**：M
+
+#### 【Task L.17】受控只读外网摄取（北极星前置） `[NEW_TASK]`
+
+* **任务编号**：`TASK-L.17`
+* **对应规格**：ADR-0014 §3；`scheme.md` goal-2、conf-6、oq-2
+* **前置依赖**：`TASK-L.14`（硬，ADR-0014 §3 要求与保险库同步落地）；**oq-2 裁决**（「一模一样」的判据）
+* **优先级**：P3（M5）
+* **状态**：`[NEW_TASK]`（**未就绪**：oq-2 未裁决，按 task-card-standard R-10 不得开工）
+* **对照痛点（代码事实）**：`ALWAYS_DENY` 含 `WebFetch` / `WebSearch`（`daemon/worker/cli-host/claude-code-adapter.ts`）；Worker 无任何外网能力。
+* **一句话目标**：Worker 能经 Daemon 代理只读抓取方案里登记的参考站点；需要登录的站点由 Daemon 用保险库凭据代为登录，Worker 看不到账密。
+* **范围（草案，oq-2 裁决后细化）**：
+  1. Daemon 代理 `daemon/web-ingest/proxy.ts`：只允许 GET；域名白名单 = 方案 `references[]` 中用户给出的 URL 的域名；响应大小与速率上限。
+  2. 登录：凭据名在目标配置中登记，Daemon 用保险库值完成登录并持有 cookie；Worker 只拿到页面内容（HTML / 截图 / DOM 摘要）。
+  3. 作为 MCP 工具经网关暴露给 Worker（`--strict-mcp-config` 下的 Stagent 网关端点）。
+* **非目标**：不给右栏开外网（conf-7 / DEC-005）；不做通用搜索。
+* **不变声明**：右栏工具白名单不变；Worker 环境不含保险库值。
+* **验收（PASS）**：oq-2 裁决后补写。
+* **FAIL**：Worker 输入、日志、证据中出现账密；请求打到白名单外域名。
+* **关键文件**：`daemon/web-ingest/*`（新）、`daemon/mcp/gateway.ts`
+* **估算**：L（裁决后拆分）
 
 ### 3.5 架构感知、监听与差异审阅（C.5 落 Sprint 2；B.1/B.2/C.4 推迟至 v0.2+）
 

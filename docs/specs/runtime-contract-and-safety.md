@@ -93,6 +93,9 @@
 | `E_SCOPE_POLICY`（v2.1） | 自动收敛后范围仍违反通配符分级（§4.1） | 说清要改哪块，或排除该区域 |
 | `E_SCOPE_APPROVAL_REQUIRED`（v2.1） | `ScopePlan.needs_approval` 有未表态项 | 点「可以」或「不行」 |
 
+> **ADR-0014 指针（2026-10-30 加注）**：上一行「点『可以』或『不行』」改为由「确认开工」一次点击授权全部敏感项，授权仍存于 `ScopePlan`。规则见 [`delivery-lifecycle.md`](./delivery-lifecycle.md) §5 SA-1。
+
+
 **Daemon 专属码**（只有 Daemon 能检出：需要读磁盘、快照或重跑预检；前端无从提前告知）：
 
 | 码 | 触发条件 |

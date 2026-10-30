@@ -26,6 +26,9 @@
 | 0012 | [`MERGED` 为唯一运行时交付终态](./0012-merged-as-terminal-state.md) | ACCEPTED | Spec Freeze §2.1 / DocGov §3.1 的 `DELIVERED` |
 | 0013 | [Claude Code 隔离弃用 `--bare`，改用 `--setting-sources ""`](./0013-cli-isolation-without-bare.md) | ACCEPTED | W.5a 早期 `--bare` 方案 |
 | 0014 | [三 Agent 拓扑与中栏意图编译组件化（形态开放）](./0014-three-agent-topology-open-supervisor.md) | ACCEPTED | conf-1/conf-5/conf-6 用户裁决（q12～q16） |
+| 0015 | [合同是最小可验收交付单元；项目 → 里程碑 → 合同 → 节点](./0015-contract-as-unit-of-delivery.md) | ACCEPTED（随 PR 合入生效） | 目标能力 q18 |
+| 0016 | [目标项目系统知识库随代码入库](./0016-system-knowledge-base-in-repo.md) | ACCEPTED（随 PR 合入生效） | 目标能力 q19 |
+| 0017 | [发布是合并之后的独立生命周期](./0017-release-lifecycle-after-merge.md) | ACCEPTED（随 PR 合入生效） | 目标能力 q17 |
 
 ---
 
